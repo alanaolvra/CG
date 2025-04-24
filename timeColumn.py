@@ -166,7 +166,7 @@ def main():
     gluPerspective(45.0, 800.0 / 600.0, 0.1, 100.0)  # 45 graus de FOV, aspecto da janela, plano de corte próximo e distante
     glMatrixMode(GL_MODELVIEW)
 
-    chao_textura = carregar_textura("piso_branco.jpeg")
+    chao_textura = carregar_textura("images\piso_branco.jpeg")
 
     last_frame = glfw.get_time()
     while not glfw.window_should_close(window):
