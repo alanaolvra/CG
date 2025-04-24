@@ -3,4 +3,4 @@
 A proposta é modelar a "Coluna da Hora", da cidade de Russas-CE, seu relógio e o cristo no topo, permitindo ao usuário explorar o ambiente em primeira pessoa. 
 Ao redor da torre, também serão modelados elementos típicos da praça, como bancos de madeira, postes de iluminação, calçamento em padrão de ladrilhos e árvores.
 
-<img src="cristo.jpeg" alt="Coluna da Hora em Russas-CE" width="200" height="500"/>
+<img src="images\cristo.jpeg" alt="Coluna da Hora em Russas-CE" width="200" height="500"/>
