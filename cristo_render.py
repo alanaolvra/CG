@@ -129,12 +129,12 @@ def main():
     # Configurar perspectiva
     gluPerspective(60, (800/600), 0.1, 1000.0)
     glTranslatef(0.0, -2.0, -15)  # Ajuste a posição da câmera
-    glScalef(0.5, 0.5, 0.5)
+    glScalef(0.2, 0.2, 0.2)
 
     # Configuração da iluminação
     setup_lighting()
 
-    obj = OBJ("script/cristo.obj", "script/cristo.mtl")
+    obj = OBJ("script/cristo2.obj", "script/cristo2.mtl")
     print("Modelo carregado com", len(obj.vertices), "vértices e", len(obj.faces), "faces")
 
     clock = pygame.time.Clock()

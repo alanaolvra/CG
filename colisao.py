@@ -3,12 +3,8 @@ import numpy as np
 
 class Colisao:
     def __init__(self):
-        # Definimos as áreas (bounding boxes) dos objetos
-        # Torre está no (0, 0, 0) e tem um tamanho específico (ajuste se precisar)
         self.torre_pos = np.array([0.0, 0.0, 0.0])
         self.torre_size = np.array([1.0, 5.0, 1.0])  # largura, altura, profundidade
-
-        # Limite do chão (altura mínima para a câmera não cair)
         self.chao_y = 1.7  # altura padrão da câmera, para não cair "abaixo do chão"
 
     def checar_colisao_chao(self, camera_pos):

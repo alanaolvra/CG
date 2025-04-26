@@ -51,8 +51,8 @@ def desenhar_relogio():
     faces = [
         (0, 4.5, 0.50, 0),     # Frente
         (0, 4.5, -0.50, 180),  # Trás
-        (0.55, 4.5, 0, 90),   # Direita
-        (-0.55, 4.5, 0, -90)    # Esquerda
+        (0.50, 4.5, 0, 90),   # Direita
+        (-0.50, 4.5, 0, -90)    # Esquerda
     ]
 
 
@@ -64,7 +64,7 @@ def desenhar_relogio():
         glPopMatrix()
 
     # Atualizar ângulos dos ponteiros
-    angulo_minutos += 1
+    angulo_minutos += 0.01
     if angulo_minutos >= 360:
         angulo_minutos = 0
         angulo_horas += 30
