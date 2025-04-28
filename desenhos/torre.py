@@ -11,12 +11,10 @@ def desenhar_torre():
     y_relogio_baixo = 0.1
     y_relogio_cima = 0.3
 
-    # ==================================================
     # PARTES BRANCAS (DESENHADAS PRIMEIRO)
-    # ==================================================
     glColor3f(1.0, 1.0, 1.0)
 
-    # --- FRENTE ---
+    # FRENTE
     # Parte de baixo branca (frente)
     glVertex3f(-0.2, -0.5, 0.5)
     glVertex3f(0.2, -0.5, 0.5)
@@ -29,7 +27,7 @@ def desenhar_torre():
     glVertex3f(0.2, y_relogio_cima, 0.5)
     glVertex3f(-0.2, y_relogio_cima, 0.5)
 
-    # --- TRÁS ---
+    # TRÁS
     # Parte de baixo branca (trás)
     glVertex3f(-0.2, -0.5, -0.5)
     glVertex3f(0.2, -0.5, -0.5)
@@ -42,7 +40,7 @@ def desenhar_torre():
     glVertex3f(0.2, y_relogio_cima, -0.5)
     glVertex3f(-0.2, y_relogio_cima, -0.5)
 
-    # --- LADOS ---
+    # LADOS
     # Lado esquerdo (branco)
     glVertex3f(-0.5, -0.5, 0.2)
     glVertex3f(-0.5, -0.5, -0.2)
@@ -66,15 +64,14 @@ def desenhar_torre():
     glVertex3f(0.5, y_relogio_cima, 0.2)
 
     glEnd()
-    # ==================================================
+
     # PARTES PRETAS (DESENHADAS DEPOIS)
-    # ==================================================
     glEnable(GL_POLYGON_OFFSET_FILL)
     glPolygonOffset(1.0, 1.0)  # Ajuste esses valores se necessário
     glBegin(GL_QUADS)
     glColor3f(0.0, 0.0, 0.0)
 
-    # --- BORDAS DA FRENTE ---
+    # BORDAS DA FRENTE
     # Borda esquerda (frente)
     glVertex3f(-0.5, -0.5, 0.5)
     glVertex3f(-0.2, -0.5, 0.5)
@@ -87,7 +84,7 @@ def desenhar_torre():
     glVertex3f(0.5, 0.5, 0.5)
     glVertex3f(0.2, 0.5, 0.5)
 
-    # --- BORDAS DE TRÁS ---
+    # BORDAS DE TRÁS
     # Borda esquerda (trás)
     glVertex3f(-0.5, -0.5, -0.5)
     glVertex3f(-0.2, -0.5, -0.5)
@@ -100,7 +97,7 @@ def desenhar_torre():
     glVertex3f(0.5, 0.5, -0.5)
     glVertex3f(0.2, 0.5, -0.5)
 
-    # --- LADOS PRETOS ---
+    # LADOS PRETOS
     # Lado direito (borda preta)
     glVertex3f(0.5, -0.5, -0.5)
     glVertex3f(0.5, 0.5, -0.5)
@@ -113,7 +110,7 @@ def desenhar_torre():
     glVertex3f(-0.5, 0.5, 0.5)
     glVertex3f(-0.5, -0.5, 0.5)
 
-    # --- TOPO E BASE PRETOS ---
+    # TOPO E BASE PRETOS
     # Topo
     glVertex3f(-0.5, 0.5, -0.5)
     glVertex3f(-0.5, 0.5, 0.5)
@@ -126,7 +123,7 @@ def desenhar_torre():
     glVertex3f(0.5, -0.5, 0.5)
     glVertex3f(-0.5, -0.5, 0.5)
 
-    # --- PARTES PRETAS SUPERIORES (frente/trás) ---
+    # PARTES PRETAS SUPERIORES (frente/trás)
     # Parte de cima da frente
     glVertex3f(-0.2, y_relogio_cima, 0.5)
     glVertex3f(0.2, y_relogio_cima, 0.5)
