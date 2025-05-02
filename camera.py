@@ -43,13 +43,13 @@ class Camera:
 
     def process_input(self, window, delta_time):
         speed = 2.5 * delta_time
-        if glfw.get_key(window, glfw.KEY_UP) == glfw.PRESS:
+        if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
             self.pos += speed * self.front
-        if glfw.get_key(window, glfw.KEY_DOWN) == glfw.PRESS:
+        if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
             self.pos -= speed * self.front
-        if glfw.get_key(window, glfw.KEY_LEFT) == glfw.PRESS:
+        if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
             self.pos -= np.cross(self.front, self.up) * speed
-        if glfw.get_key(window, glfw.KEY_RIGHT) == glfw.PRESS:
+        if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
             self.pos += np.cross(self.front, self.up) * speed
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             glfw.set_window_should_close(window, True)
