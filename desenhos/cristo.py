@@ -2,7 +2,6 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import pywavefront
 
-# Carregamento do modelo
 cristo_modelo = None
 
 def carregar_cristo():
@@ -17,7 +16,6 @@ def carregar_cristo():
     
 def aplicar_material(material):
     if material is not None:
-        # Definir as propriedades do material de ambiente, difuso e especular
         glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
         glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
         glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
@@ -26,10 +24,9 @@ def aplicar_material(material):
         glMaterialf(GL_FRONT, GL_DEPTH_SCALE, material.dissolve)
 
 def configurar_iluminacao():
-    # Definir a posição da luz (no espaço 3D)
-    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])  # Luz em (5, 5, 5)
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])  # Luz branca difusa
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])  # Luz branca especular
+    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
 
@@ -40,18 +37,14 @@ def desenhar_cristo():
         carregar_cristo()
 
     glPushMatrix()
+    glTranslatef(0, 5, 0)  
+    glScalef(0.09, 0.09, 0.09)
 
-    # Posicionar o Cristo no topo do relógio que está no topo da torre
-    glTranslatef(0, 5, 0)   # Altura aproximada (torre + relógio)
-    glScalef(0.09, 0.09, 0.09)   # Escala para não ficar grande demais
-
-    # Ativar iluminação
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
 
     for name, mesh in cristo_modelo.meshes.items():
-        # Verificar se o material do mesh está disponível
         if name in cristo_modelo.materials:
             material = cristo_modelo.materials[name]
             aplicar_material(material)

@@ -44,11 +44,9 @@ def main():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
 
-    # Define posição da luz (x, y, z, w)
     light_position = [0.0, 10.0, 10.0, 1.0]
     glLightfv(GL_LIGHT0, GL_POSITION, light_position)
 
-    # Define a luz ambiente, difusa e especular
     glLightfv(GL_LIGHT0, GL_AMBIENT,  [0.2, 0.2, 0.2, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  [0.8, 0.8, 0.8, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
@@ -68,7 +66,6 @@ def main():
 
         camera.process_input(window, delta_time)
 
-        # Trata as colisões depois do movimento
         camera.pos = colisao.checar_colisoes(camera.pos)
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

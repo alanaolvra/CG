@@ -10,12 +10,12 @@ def desenhar_circulo(raio, num_lados=100):
         angulo = 2 * math.pi * i / num_lados
         x = math.cos(angulo) * raio
         y = math.sin(angulo) * raio
-        glVertex3f(x, y, 0.01)  # um pouquinho na frente para evitar z-fighting
+        glVertex3f(x, y, 0.01)
     glEnd()
 
 def desenhar_ponteiro(angulo, comprimento, largura):
     glPushMatrix()
-    glRotatef(-angulo, 0, 0, 1)  # Sentido horário
+    glRotatef(-angulo, 0, 0, 1)
     glBegin(GL_QUADS)
     glVertex3f(-largura/2, 0, 0.02)
     glVertex3f(largura/2, 0, 0.02)
@@ -28,10 +28,10 @@ def desenhar_ponteiro(angulo, comprimento, largura):
 
 def desenhar_relogio_face():
     # Borda cinza escuro
-    glColor3f(0.2, 0.2, 0.2)  # Cinza escuro
+    glColor3f(0.2, 0.2, 0.2)
 
     # Círculo branco do relógio
-    glColor3f(1, 1, 1)  # Branco
+    glColor3f(1, 1, 1)
     desenhar_circulo(0.29)
 
     # Ponteiro das horas
