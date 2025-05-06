@@ -5,7 +5,7 @@ import glfw
 
 class Camera:
     def __init__(self):
-        self.pos = np.array([0.0, 1.7, 8.0])
+        self.pos = np.array([0.0, 1.7, 15.0])
         self.front = np.array([0.0, 0.0, -1.0])
         self.up = np.array([0.0, 1.0, 0.0])
         self.yaw = -90.0
@@ -47,9 +47,9 @@ class Camera:
             self.pos += speed * self.front
         if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
             self.pos -= speed * self.front
-        if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
-            self.pos -= np.cross(self.front, self.up) * speed
         if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
+            self.pos -= np.cross(self.front, self.up) * speed
+        if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
             self.pos += np.cross(self.front, self.up) * speed
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             glfw.set_window_should_close(window, True)

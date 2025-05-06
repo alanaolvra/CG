@@ -31,7 +31,7 @@ def carregar_textura(path):
 def init_window():
     if not glfw.init():
         return None
-    window = glfw.create_window(800, 600, "Coluna da Hora - Russas", None, None)
+    window = glfw.create_window(1920, 1080, "Coluna da Hora - Russas", None, None)
     glfw.make_context_current(window)
     glfw.set_cursor_pos_callback(window, camera.mouse_callback)
     glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
@@ -55,7 +55,7 @@ def main():
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45.0, 800.0 / 600.0, 0.1, 100.0)
+    gluPerspective(45.0, 1920.0 / 1080.0, 0.1, 100.0)
     glMatrixMode(GL_MODELVIEW)
 
     chao_textura = carregar_textura("images/piso_branco.jpeg")
