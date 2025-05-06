@@ -1,17 +1,12 @@
 # Blender 4.4.1 MTL File: 'cristo.blend'
 # www.blender.org
 
-newmtl MaterialCristo
-Ka 0.2 0.2 0.2         # Ambiente
-Kd 0.75 0.75 0.75      # Difuso (cinza claro)
-Ks 0.4 0.4 0.4         # Especular
-Ns 50.0                # Brilho
-d 1.0                  # Opaco
-illum 2                # Modelo de iluminação padrão
-
-newmtl Base_Material
-Ka 0.2 0.2 0.2       # Cor ambiente (escuro)
-Kd 0.5 0.5 0.5       # Cor difusa (cinza escuro)
-Ks 0.5 0.5 0.5       # Cor especular (cinza médio)
-Ns 20.000            # Brilho moderado
-
+newmtl Materiais
+Ns 250.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+d 1.000000
+illum 2

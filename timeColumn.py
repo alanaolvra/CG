@@ -8,6 +8,7 @@ from desenhos.chao import desenhar_chao
 from desenhos.fundo import desenhar_ceu
 from desenhos.relogio import desenhar_relogio
 from desenhos.torre import desenhar_torre
+from desenhos.cristo import desenhar_cristo
 from camera import get_camera
 from colisao import get_colisao
 
@@ -40,6 +41,17 @@ def main():
     pygame.init()
     window = init_window()
     glEnable(GL_DEPTH_TEST)
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+
+    # Define posição da luz (x, y, z, w)
+    light_position = [0.0, 10.0, 10.0, 1.0]
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position)
+
+    # Define a luz ambiente, difusa e especular
+    glLightfv(GL_LIGHT0, GL_AMBIENT,  [0.2, 0.2, 0.2, 1.0])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE,  [0.8, 0.8, 0.8, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -68,6 +80,7 @@ def main():
         desenhar_relogio()
         desenhar_ceu()
         desenhar_torre()
+        desenhar_cristo()
 
         glfw.swap_buffers(window)
         glfw.poll_events()

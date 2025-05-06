@@ -64,7 +64,7 @@ def desenhar_relogio():
         glPopMatrix()
 
     # Atualizar ângulos dos ponteiros
-    angulo_minutos += 0.01
+    angulo_minutos += 0.1
     if angulo_minutos >= 360:
         angulo_minutos = 0
         angulo_horas += 30
