@@ -51,7 +51,7 @@ def desenhar_cristo():
         carregar_cristo()
 
     glPushMatrix()
-    glTranslatef(0, 5.1, 0)
+    glTranslatef(0, 5.05, 0)
     glScalef(0.09, 0.09, 0.09)
     glEnable(GL_NORMALIZE)
 
