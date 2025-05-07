@@ -13,6 +13,13 @@ def carregar_cristo():
         parse=True
     )
     print("Materiais carregados:", cristo_modelo.materials)
+    print("Número total de vértices:", len(cristo_modelo.vertices))
+    
+    total_faces = sum(len(mesh.faces) for mesh in cristo_modelo.mesh_list)
+    print("Número total de faces (triângulos):", total_faces)
+    
+    print("Número de malhas:", len(cristo_modelo.mesh_list))
+    print("Nomes das malhas:", [mesh.name for mesh in cristo_modelo.mesh_list])
     
 def aplicar_material(material):
     if material is not None:
