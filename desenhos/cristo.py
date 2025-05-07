@@ -3,15 +3,17 @@ from OpenGL.GLU import *
 import pywavefront
 
 cristo_modelo = None
-
 def carregar_cristo():
     global cristo_modelo
     cristo_modelo = pywavefront.Wavefront(
         'script/cristo.obj',
         create_materials=True,
         collect_faces=True,
-        parse=True
+        parse=True,
+        strict=False
     )
+    print("Normais carregadas:", len(cristo_modelo.parser.normals))
+    print("Modelo carregado com sucesso!")
     print("Materiais carregados:", cristo_modelo.materials)
     print("Número total de vértices:", len(cristo_modelo.vertices))
     
@@ -23,12 +25,17 @@ def carregar_cristo():
     
 def aplicar_material(material):
     if material is not None:
-        glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
-        glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
-        glMaterialf(GL_FRONT, GL_SHININESS, material.shininess)
-        glMaterialfv(GL_FRONT, GL_EMISSION, material.emission)
-        glMaterialf(GL_FRONT, GL_DEPTH_SCALE, material.dissolve)
+        # Usar getattr() para evitar erros se atributos estiverem faltando
+        glMaterialfv(GL_FRONT, GL_AMBIENT, getattr(material, 'ambient', [0.2, 0.2, 0.2, 1.0]))
+        glMaterialfv(GL_FRONT, GL_DIFFUSE, getattr(material, 'diffuse', [0.8, 0.8, 0.8, 1.0]))
+        glMaterialfv(GL_FRONT, GL_SPECULAR, getattr(material, 'specular', [0.0, 0.0, 0.0, 1.0]))
+        
+        # Corrigir emissive e adicionar valor padrão
+        glMaterialfv(GL_FRONT, GL_EMISSION, getattr(material, 'emissive', [0.0, 0.0, 0.0, 1.0]))
+        
+        # Garantir que shininess está dentro do limite 0-128
+        shininess = min(getattr(material, 'shininess', 0.0), 128.0)
+        glMaterialf(GL_FRONT, GL_SHININESS, shininess)
 
 def configurar_iluminacao():
     glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
@@ -44,26 +51,33 @@ def desenhar_cristo():
         carregar_cristo()
 
     glPushMatrix()
-    glTranslatef(0, 5, 0)  
+    glTranslatef(0, 5, 0)
     glScalef(0.09, 0.09, 0.09)
+    glEnable(GL_NORMALIZE)
 
+    configurar_iluminacao()
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
-    glEnable(GL_COLOR_MATERIAL)
 
-    for name, mesh in cristo_modelo.meshes.items():
-        if name in cristo_modelo.materials:
-            material = cristo_modelo.materials[name]
-            aplicar_material(material)
-
+    for mesh in cristo_modelo.mesh_list:
+        # Verifica se há materiais na malha e pega o primeiro
+        if mesh.materials:  # <--- Correção aqui
+            material_name = mesh.materials[0].name  # <--- Acessa a lista
+            material = cristo_modelo.materials.get(material_name)
+            if material:
+                aplicar_material(material)
+        
         glBegin(GL_TRIANGLES)
         for face in mesh.faces:
             for vertex_i in face:
+                # Aplica normal se existir
+                if cristo_modelo.parser.normals:
+                    try:
+                        glNormal3f(*cristo_modelo.parser.normals[vertex_i])
+                    except IndexError:
+                        pass  # Caso o índice seja inválido
                 glVertex3f(*cristo_modelo.vertices[vertex_i])
         glEnd()
-
-    glDisable(GL_COLOR_MATERIAL)
-    glDisable(GL_LIGHT0)
+        
     glDisable(GL_LIGHTING)
-
     glPopMatrix()
