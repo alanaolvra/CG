@@ -13,27 +13,21 @@ def carregar_cristo():
         strict=False
     )
     print("Normais carregadas:", len(cristo_modelo.parser.normals))
-    print("Modelo carregado com sucesso!")
     print("Materiais carregados:", cristo_modelo.materials)
     print("Número total de vértices:", len(cristo_modelo.vertices))
-    
     total_faces = sum(len(mesh.faces) for mesh in cristo_modelo.mesh_list)
     print("Número total de faces (triângulos):", total_faces)
-    
-    print("Número de malhas:", len(cristo_modelo.mesh_list))
     print("Nomes das malhas:", [mesh.name for mesh in cristo_modelo.mesh_list])
+    print("Número de malhas:", len(cristo_modelo.mesh_list))
+    
     
 def aplicar_material(material):
     if material is not None:
-        # Usar getattr() para evitar erros se atributos estiverem faltando
+        #getattr() para evitar erros se atributos estiverem faltando
         glMaterialfv(GL_FRONT, GL_AMBIENT, getattr(material, 'ambient', [0.2, 0.2, 0.2, 1.0]))
         glMaterialfv(GL_FRONT, GL_DIFFUSE, getattr(material, 'diffuse', [0.8, 0.8, 0.8, 1.0]))
         glMaterialfv(GL_FRONT, GL_SPECULAR, getattr(material, 'specular', [0.0, 0.0, 0.0, 1.0]))
-        
-        # Corrigir emissive e adicionar valor padrão
         glMaterialfv(GL_FRONT, GL_EMISSION, getattr(material, 'emissive', [0.0, 0.0, 0.0, 1.0]))
-        
-        # Garantir que shininess está dentro do limite 0-128
         shininess = min(getattr(material, 'shininess', 0.0), 128.0)
         glMaterialf(GL_FRONT, GL_SHININESS, shininess)
 
@@ -60,9 +54,8 @@ def desenhar_cristo():
     glEnable(GL_LIGHT0)
 
     for mesh in cristo_modelo.mesh_list:
-        # Verifica se há materiais na malha e pega o primeiro
-        if mesh.materials:  # <--- Correção aqui
-            material_name = mesh.materials[0].name  # <--- Acessa a lista
+        if mesh.materials:
+            material_name = mesh.materials[0].name
             material = cristo_modelo.materials.get(material_name)
             if material:
                 aplicar_material(material)
@@ -70,12 +63,11 @@ def desenhar_cristo():
         glBegin(GL_TRIANGLES)
         for face in mesh.faces:
             for vertex_i in face:
-                # Aplica normal se existir
                 if cristo_modelo.parser.normals:
                     try:
                         glNormal3f(*cristo_modelo.parser.normals[vertex_i])
                     except IndexError:
-                        pass  # Caso o índice seja inválido
+                        pass
                 glVertex3f(*cristo_modelo.vertices[vertex_i])
         glEnd()
         
