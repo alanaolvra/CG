@@ -4,13 +4,13 @@ import math
 angulo_horas = 0
 angulo_minutos = 0
 
-def desenhar_circulo(raio, num_lados=100):
-    glBegin(GL_POLYGON)
-    for i in range(num_lados):
-        angulo = 2 * math.pi * i / num_lados
-        x = math.cos(angulo) * raio
-        y = math.sin(angulo) * raio
-        glVertex3f(x, y, 0.01)
+def desenhar_quadrado(tamanho):
+    meio = tamanho / 2
+    glBegin(GL_QUADS)
+    glVertex3f(-meio, -meio, 0.01)
+    glVertex3f(meio, -meio, 0.01)
+    glVertex3f(meio, meio, 0.01)
+    glVertex3f(-meio, meio, 0.01)
     glEnd()
 
 def desenhar_ponteiro(angulo, comprimento, largura):
@@ -32,7 +32,7 @@ def desenhar_relogio_face():
 
     # Círculo branco do relógio
     glColor3f(1, 1, 1)
-    desenhar_circulo(0.29)
+    desenhar_quadrado(0.58)
 
     # Ponteiro das horas
     glColor3f(0, 0, 0)  # Preto
@@ -49,10 +49,10 @@ def desenhar_relogio():
 
     # Desenhar relógio nas 4 faces
     faces = [
-        (0, 4.5, 0.50, 0),     # Frente
-        (0, 4.5, -0.50, 180),  # Trás
-        (0.50, 4.5, 0, 90),   # Direita
-        (-0.50, 4.5, 0, -90)    # Esquerda
+        (0, 4.0, 0.50, 0),     # Frente
+        (0, 4.0, -0.50, 180),  # Trás
+        (0.50, 4.0, 0, 90),   # Direita
+        (-0.50, 4.0, 0, -90)    # Esquerda
     ]
 
 

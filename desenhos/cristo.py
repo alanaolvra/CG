@@ -23,18 +23,23 @@ def carregar_cristo():
     
 def aplicar_material(material):
     if material is not None:
-        #getattr() para evitar erros se atributos estiverem faltando
-        glMaterialfv(GL_FRONT, GL_AMBIENT, getattr(material, 'ambient', [0.2, 0.2, 0.2, 1.0]))
-        glMaterialfv(GL_FRONT, GL_DIFFUSE, getattr(material, 'diffuse', [0.8, 0.8, 0.8, 1.0]))
-        glMaterialfv(GL_FRONT, GL_SPECULAR, getattr(material, 'specular', [0.0, 0.0, 0.0, 1.0]))
-        glMaterialfv(GL_FRONT, GL_EMISSION, getattr(material, 'emissive', [0.0, 0.0, 0.0, 1.0]))
-        shininess = min(getattr(material, 'shininess', 0.0), 128.0)
-        glMaterialf(GL_FRONT, GL_SHININESS, shininess)
+        # Aplica os atributos diretamente, sem valores padrão
+        if hasattr(material, 'ambient'):
+            glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
+        if hasattr(material, 'diffuse'):
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
+        if hasattr(material, 'specular'):
+            glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
+        if hasattr(material, 'emissive'):
+            glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive)
+        if hasattr(material, 'shininess'):
+            glMaterialf(GL_FRONT, GL_SHININESS, min(material.shininess, 128.0))
 
 def configurar_iluminacao():
     glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.2, 0.2, 0.2, 1.0])
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
 
@@ -45,13 +50,12 @@ def desenhar_cristo():
         carregar_cristo()
 
     glPushMatrix()
-    glTranslatef(0, 5.05, 0)
-    glScalef(0.09, 0.09, 0.09)
+    glShadeModel(GL_SMOOTH)
+    glTranslatef(0, 5.06, 0)
+    glScalef(0.08, 0.08, 0.08)
     glEnable(GL_NORMALIZE)
 
     configurar_iluminacao()
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
 
     for mesh in cristo_modelo.mesh_list:
         if mesh.materials:
