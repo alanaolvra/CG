@@ -24,13 +24,8 @@ def desenhar_ponteiro(angulo, comprimento, largura):
     glEnd()
     glPopMatrix()
 
-
-
 def desenhar_relogio_face():
-    # Borda cinza escuro
-    glColor3f(0.2, 0.2, 0.2)
-
-    # Círculo branco do relógio
+    # Quadrado branco do relógio
     glColor3f(1, 1, 1)
     desenhar_quadrado(0.58)
 
@@ -42,8 +37,6 @@ def desenhar_relogio_face():
     glColor3f(0, 0, 0)  # Preto
     desenhar_ponteiro(angulo_minutos, 0.25, 0.01)
 
-
-
 def desenhar_relogio():
     global angulo_horas, angulo_minutos
 
@@ -54,7 +47,6 @@ def desenhar_relogio():
         (0.50, 4.0, 0, 90),   # Direita
         (-0.50, 4.0, 0, -90)    # Esquerda
     ]
-
 
     for x, y, z, rot in faces:
         glPushMatrix()

@@ -12,18 +12,9 @@ def carregar_cristo():
         parse=True,
         strict=False
     )
-    print("Normais carregadas:", len(cristo_modelo.parser.normals))
-    print("Materiais carregados:", cristo_modelo.materials)
-    print("Número total de vértices:", len(cristo_modelo.vertices))
-    total_faces = sum(len(mesh.faces) for mesh in cristo_modelo.mesh_list)
-    print("Número total de faces (triângulos):", total_faces)
-    print("Nomes das malhas:", [mesh.name for mesh in cristo_modelo.mesh_list])
-    print("Número de malhas:", len(cristo_modelo.mesh_list))
-    
     
 def aplicar_material(material):
     if material is not None:
-        # Aplica os atributos diretamente, sem valores padrão
         if hasattr(material, 'ambient'):
             glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
         if hasattr(material, 'diffuse'):
@@ -38,8 +29,8 @@ def aplicar_material(material):
 def configurar_iluminacao():
     glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.2, 0.2, 0.2, 1.0])
+    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
 

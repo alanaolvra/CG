@@ -3,9 +3,8 @@ from OpenGL.GL import *
 def desenhar_ceu(tamanho=20, altura=20):
     glPushMatrix()
 
-    glColor3f(0.5, 0.7, 1.0)  # Cor do céu (azul claro)
-
-    # Posições
+    glColor3f(0.5, 0.7, 1.0)
+    
     x_min = -tamanho
     x_max = tamanho
     z_min = -tamanho

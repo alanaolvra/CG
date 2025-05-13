@@ -53,7 +53,7 @@ def main():
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
-    gluPerspective(45.0, 1920.0 / 1080.0, 0.1, 100.0)
+    gluPerspective(45, 1920 / 1080, 1, 100)
     glMatrixMode(GL_MODELVIEW)
 
     chao_textura = carregar_textura("images/piso_branco.jpeg")
@@ -72,6 +72,9 @@ def main():
         glLoadIdentity()
         center = camera.pos + camera.front
         gluLookAt(*camera.pos, *center, *camera.up)
+
+        glfw.set_cursor_pos_callback(window, camera.mouse_callback)
+        glfw.set_mouse_button_callback(window, camera.mouse_button_callback)
 
         desenhar_chao(chao_textura)
         desenhar_relogio()
