@@ -3,7 +3,7 @@ from OpenGL.GL import *
 def desenhar_chao(textura_id):
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, textura_id)
-    glColor3f(1, 1, 1)
+    glColor3f(0.8, 0.8, 0.8)
 
     glBegin(GL_QUADS)
     glTexCoord2f(0, 0); glVertex3f(-20, 0, -20)

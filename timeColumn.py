@@ -56,7 +56,7 @@ def main():
     gluPerspective(45, 1920 / 1080, 1, 100)
     glMatrixMode(GL_MODELVIEW)
 
-    chao_textura = carregar_textura("images/piso_branco.jpeg")
+    chao_textura = carregar_textura("images/chao.png")
 
     last_frame = glfw.get_time()
     while not glfw.window_should_close(window):
@@ -75,10 +75,10 @@ def main():
 
         glfw.set_cursor_pos_callback(window, camera.mouse_callback)
         glfw.set_mouse_button_callback(window, camera.mouse_button_callback)
-
+        
+        desenhar_ceu()
         desenhar_chao(chao_textura)
         desenhar_relogio()
-        desenhar_ceu()
         desenhar_torre()
         desenhar_cristo()
 
