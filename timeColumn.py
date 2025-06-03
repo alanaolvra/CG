@@ -9,6 +9,7 @@ from desenhos.fundo import desenhar_ceu
 from desenhos.relogio import desenhar_relogio
 from desenhos.torre import desenhar_torre
 from desenhos.cristo import desenhar_cristo
+from desenhos.banco import desenhar_bancos
 from camera import get_camera
 from colisao import get_colisao
 
@@ -81,7 +82,8 @@ def main():
         desenhar_relogio()
         desenhar_torre()
         desenhar_cristo()
-
+        desenhar_bancos(10)
+        desenhar_bancos(-10)
         glfw.swap_buffers(window)
         glfw.poll_events()
 
