@@ -10,6 +10,7 @@ from desenhos.relogio import desenhar_relogio
 from desenhos.torre import desenhar_torre
 from desenhos.cristo import desenhar_cristo
 from desenhos.banco import desenhar_bancos
+from desenhos.poste import desenhar_poste
 from camera import get_camera
 from colisao import get_colisao
 
@@ -58,6 +59,7 @@ def main():
     glMatrixMode(GL_MODELVIEW)
 
     chao_textura = carregar_textura("images/chao.png")
+    textura_madeira = carregar_textura("images/banco.jpeg")
 
     last_frame = glfw.get_time()
     while not glfw.window_should_close(window):
@@ -82,8 +84,11 @@ def main():
         desenhar_relogio()
         desenhar_torre()
         desenhar_cristo()
-        desenhar_bancos(10)
-        desenhar_bancos(-10)
+        desenhar_bancos(10, textura_madeira)
+        desenhar_bancos(-10, textura_madeira)
+        desenhar_poste(10)
+        desenhar_poste(-10)
+
         glfw.swap_buffers(window)
         glfw.poll_events()
 
