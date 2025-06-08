@@ -11,6 +11,7 @@ from desenhos.torre import desenhar_torre
 from desenhos.cristo import desenhar_cristo
 from desenhos.banco import desenhar_bancos
 from desenhos.poste import desenhar_poste
+from desenhos.grama import desenhar_grama
 from camera import get_camera
 from colisao import get_colisao
 
@@ -43,15 +44,6 @@ def main():
     pygame.init()
     window = init_window()
     glEnable(GL_DEPTH_TEST)
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
-
-    light_position = [0.0, 10.0, 10.0, 1.0]
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position)
-
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  [0.2, 0.2, 0.2, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  [0.8, 0.8, 0.8, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
@@ -60,6 +52,7 @@ def main():
 
     chao_textura = carregar_textura("images/chao.png")
     textura_madeira = carregar_textura("images/banco.jpeg")
+    textura_grama = carregar_textura("images/grama.png")
 
     last_frame = glfw.get_time()
     while not glfw.window_should_close(window):
@@ -84,6 +77,8 @@ def main():
         desenhar_relogio()
         desenhar_torre()
         desenhar_cristo()
+        desenhar_grama(10, textura_grama)
+        desenhar_grama(-10, textura_grama)
         desenhar_bancos(10, textura_madeira)
         desenhar_bancos(-10, textura_madeira)
         desenhar_poste(10)

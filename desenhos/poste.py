@@ -27,13 +27,25 @@ def aplicar_material(material):
         if hasattr(material, 'shininess'):
             glMaterialf(GL_FRONT, GL_SHININESS, min(material.shininess, 128.0))
 
+
 def configurar_iluminacao():
-    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.4, 0.4, 0.4, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0])
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
+
+    # Posição da luz no mundo
+    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
+    
+    # Luz ambiente reduzida (evita que o preto fique cinza)
+    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.05, 0.05, 0.05, 1.0])
+    
+    # Luz difusa (luz branca principal)
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+    
+    # Especular sutil (brilho)
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
+
+    glShadeModel(GL_SMOOTH)
+    glEnable(GL_NORMALIZE)
 
 def desenhar_poste(lado):
     global poste_modelo
@@ -43,10 +55,9 @@ def desenhar_poste(lado):
 
     glPushMatrix()
     glShadeModel(GL_SMOOTH)
-
-    # Poste centralizado entre os bancos
     glTranslatef(lado, 0, 0)
-    glScalef(0.3, 0.3, 0.3)  # Ajuste de escala se necessário
+    glScalef(0.2, 0.2, 0.2)  # Ajuste de escala se necessário
+    glRotatef(90, 0, 1, 0)
     glEnable(GL_NORMALIZE)
 
     configurar_iluminacao()
