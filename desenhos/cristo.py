@@ -28,11 +28,9 @@ def aplicar_material(material):
 
 def configurar_iluminacao():
     glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
 def desenhar_cristo():
     global cristo_modelo
@@ -44,17 +42,28 @@ def desenhar_cristo():
     glShadeModel(GL_SMOOTH)
     glTranslatef(0, 5.06, 0)
     glScalef(0.08, 0.08, 0.08)
+
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
     glEnable(GL_NORMALIZE)
 
     configurar_iluminacao()
 
     for mesh in cristo_modelo.mesh_list:
+        material = None
         if mesh.materials:
             material_name = mesh.materials[0].name
             material = cristo_modelo.materials.get(material_name)
-            if material:
-                aplicar_material(material)
-        
+
+        if material:
+            aplicar_material(material)
+        else:
+            # Fallback para um material claro padrão
+            glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
+            glMaterialfv(GL_FRONT, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+            glMaterialf(GL_FRONT, GL_SHININESS, 50.0)
+
         glBegin(GL_TRIANGLES)
         for face in mesh.faces:
             for vertex_i in face:
@@ -65,6 +74,10 @@ def desenhar_cristo():
                         pass
                 glVertex3f(*cristo_modelo.vertices[vertex_i])
         glEnd()
-        
+
     glDisable(GL_LIGHTING)
+    glDisable(GL_LIGHT0)
+    glDisable(GL_NORMALIZE)
+    
     glPopMatrix()
+

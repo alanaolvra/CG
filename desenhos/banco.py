@@ -1,5 +1,20 @@
 from OpenGL.GL import *
 
+def configurar_iluminacao():
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glEnable(GL_COLOR_MATERIAL)
+
+    # Posição da luz
+    glLightfv(GL_LIGHT0, GL_POSITION, [2.0, 5.0, 2.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.7, 0.7, 0.7, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+
+    # Propriedades do material
+    glMaterialfv(GL_FRONT, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+    glMaterialfv(GL_FRONT, GL_SHININESS, 50)
+
 def desenhar_cubo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura=None):
     glPushMatrix()
     glTranslatef(x, y, z)
@@ -8,53 +23,60 @@ def desenhar_cubo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura=None
     if usar_textura and textura:
         glEnable(GL_TEXTURE_2D)
         glBindTexture(GL_TEXTURE_2D, textura)
-        glColor3f(1, 1, 1)
+        glColor3f(1, 1, 1)  # Mantém cor branca para não interferir na textura
         desenhar_cubo_unitario(repeat_x=sx, repeat_y=sz)
         glDisable(GL_TEXTURE_2D)
     else:
+        glColor3f(0.1, 0.1, 0.1)
         desenhar_cubo_unitario()
 
     glPopMatrix()
 
 def desenhar_cubo_unitario(repeat_x=4, repeat_y=4):
     glBegin(GL_QUADS)
-    
+
     # Frente
+    glNormal3f(0, 0, 1)
     glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5,  0.5)
     glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, -0.5,  0.5)
     glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5,  0.5,  0.5)
     glTexCoord2f(0, repeat_y); glVertex3f(-0.5,  0.5,  0.5)
 
     # Trás
+    glNormal3f(0, 0, -1)
     glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, -0.5)
     glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, -0.5, -0.5)
     glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5,  0.5, -0.5)
     glTexCoord2f(0, repeat_y); glVertex3f(-0.5,  0.5, -0.5)
 
     # Esquerda
+    glNormal3f(-1, 0, 0)
     glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, -0.5)
     glTexCoord2f(repeat_x, 0); glVertex3f(-0.5, -0.5,  0.5)
     glTexCoord2f(repeat_x, repeat_y); glVertex3f(-0.5,  0.5,  0.5)
     glTexCoord2f(0, repeat_y); glVertex3f(-0.5,  0.5, -0.5)
 
     # Direita
+    glNormal3f(1, 0, 0)
     glTexCoord2f(0, 0); glVertex3f(0.5, -0.5, -0.5)
     glTexCoord2f(repeat_x, 0); glVertex3f(0.5, -0.5,  0.5)
     glTexCoord2f(repeat_x, repeat_y); glVertex3f(0.5,  0.5,  0.5)
     glTexCoord2f(0, repeat_y); glVertex3f(0.5,  0.5, -0.5)
 
     # Topo
+    glNormal3f(0, 1, 0)
     glTexCoord2f(0, 0); glVertex3f(-0.5, 0.5, -0.5)
     glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, 0.5, -0.5)
     glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5, 0.5,  0.5)
     glTexCoord2f(0, repeat_y); glVertex3f(-0.5, 0.5,  0.5)
 
     # Base
+    glNormal3f(0, -1, 0)
     glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, -0.5)
     glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, -0.5, -0.5)
     glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5, -0.5,  0.5)
     glTexCoord2f(0, repeat_y); glVertex3f(-0.5, -0.5,  0.5)
-    
+
     glEnd()
 
 def desenhar_banco_modular(pos_x=0, textura_madeira=None):
@@ -65,7 +87,6 @@ def desenhar_banco_modular(pos_x=0, textura_madeira=None):
     espessura = 0.08
     profundidade = 0.20
 
-    # === Madeira (textura aplicada)
     if textura_madeira:
         # Assento
         desenhar_cubo_escalado(0, altura_assento, -0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
@@ -81,7 +102,7 @@ def desenhar_banco_modular(pos_x=0, textura_madeira=None):
     else:
         glColor3f(0.5, 0.3, 0.1)
 
-    # === Suportes metálicos (sem textura)
+    # Suportes
     glColor3f(0.1, 0.1, 0.1)
     largura_total = comprimento_ripa
     offset_perna = largura_total / 2 - 0.1
