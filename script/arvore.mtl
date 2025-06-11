@@ -1,0 +1,22 @@
+# Blender 4.4.1 MTL File: 'None'
+# www.blender.org
+
+newmtl Palm_4_Leaf
+Ns 200.000000
+Ka 0.800000 0.800000 0.800000
+Ks 0.300000 0.300000 0.300000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd images\folha.png
+map_d images\folha.png
+
+newmtl Plam_4_Trunk
+Ns 200.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.300000 0.300000 0.300000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 2
+map_Kd images\tronco.png
+map_d images\tronco.png

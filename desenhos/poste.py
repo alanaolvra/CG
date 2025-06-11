@@ -31,17 +31,9 @@ def aplicar_material(material):
 def configurar_iluminacao():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
-
-    # Posição da luz no mundo
     glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
-    
-    # Luz ambiente reduzida (evita que o preto fique cinza)
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.05, 0.05, 0.05, 1.0])
-    
-    # Luz difusa (luz branca principal)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    
-    # Especular sutil (brilho)
     glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
 
     glShadeModel(GL_SMOOTH)
