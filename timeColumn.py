@@ -65,8 +65,6 @@ def main():
     chao_textura = carregar_textura("images/chao.png")
     textura_madeira = carregar_textura("images/banco.jpeg")
     textura_grama = carregar_textura("images/grama.png")
-    textura_folha = carregar_textura("images/folha.png")
-    textura_tronco = carregar_textura("images/tronco.png")
 
     last_frame = glfw.get_time()
     while not glfw.window_should_close(window):
@@ -97,7 +95,10 @@ def main():
         desenhar_bancos(-10, textura_madeira)
         desenhar_poste(10)
         desenhar_poste(-10)
-        desenhar_arvore(5, textura_folha, textura_tronco)
+        desenhar_arvore(7,0)
+        desenhar_arvore(13,0)
+        desenhar_arvore(-7,0)
+        desenhar_arvore(-13,0)
 
         glfw.swap_buffers(window)
         glfw.poll_events()

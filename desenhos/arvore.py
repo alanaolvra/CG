@@ -30,59 +30,51 @@ def configurar_iluminacao():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
     glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.05, 0.05, 0.05, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
+    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.01, 0.01, 0.01, 1.0])
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1, 1, 1, 1.0])
+    glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1.0])
 
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
 
-def desenhar_arvore(lado, textura_folha, textura_tronco):
+def desenhar_arvore(ladox, ladoz):
     if arvore_modelo is None:
         carregar_arvore()
 
     glPushMatrix()
-    glTranslatef(lado, 0, 0)
-    glScalef(0.2, 0.2, 0.2)
-    glRotatef(90, 0, 1, 0)
-
-    glEnable(GL_BLEND)
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
-    glEnable(GL_ALPHA_TEST)
-    glAlphaFunc(GL_GREATER, 0.1)
+    glTranslatef(ladox, 0, ladoz)
+    glScalef(1, 1, 1)
     
     configurar_iluminacao()
 
     for mesh in arvore_modelo.mesh_list:
-        mat = arvore_modelo.materials.get(mesh.materials[0])
-        aplicar_material(mat)
-        
-        # Seleção de textura
-        tex_path = getattr(getattr(mat, 'texture', None), 'path', '').lower()
-        if 'Palm_4_Leaf' in tex_path:
-            glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, textura_folha)
-        elif 'Plam_4_Trunk' in tex_path:
-            glEnable(GL_TEXTURE_2D)
-            glBindTexture(GL_TEXTURE_2D, textura_tronco)
+        material = None
+        if mesh.materials:
+            material_name = mesh.materials[0].name
+            material = arvore_modelo.materials.get(material_name)
+
+        if material:
+            aplicar_material(material)
         else:
-            glDisable(GL_TEXTURE_2D)
+            # Fallback para um material claro padrão
+            glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.1, 0.05, 1.0])   # Marrom escuro
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.4, 0.2, 0.1, 1.0])    # Marrom
+            glMaterialfv(GL_FRONT, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0])   # Pouco brilho
+            glMaterialf(GL_FRONT, GL_SHININESS, 20.0)
 
         glBegin(GL_TRIANGLES)
         for face in mesh.faces:
             for vertex_i in face:
-                if vertex_i < len(arvore_modelo.parser.normals):
-                    glNormal3f(*arvore_modelo.parser.normals[vertex_i])
-                
-                if vertex_i < len(arvore_modelo.parser.tex_coords):
-                    glTexCoord2f(*arvore_modelo.parser.tex_coords[vertex_i])
-                
-                glVertex3f(*arvore_modelo.vertices[vertex_i])
+                if arvore_modelo.parser.normals:
+                    try:
+                        glNormal3f(*arvore_modelo.parser.normals[vertex_i])
+                    except IndexError:
+                        pass
+                glVertex3f(*arvore_modelo.vertices[vertex_i][:3])
         glEnd()
-        
-        glDisable(GL_TEXTURE_2D)
 
-    glDisable(GL_BLEND)
-    glDisable(GL_ALPHA_TEST)
     glDisable(GL_LIGHTING)
+    glDisable(GL_LIGHT0)
+    glDisable(GL_NORMALIZE)
+        
     glPopMatrix()
