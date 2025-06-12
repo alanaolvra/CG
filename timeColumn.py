@@ -13,6 +13,7 @@ from desenhos.banco import desenhar_bancos
 from desenhos.poste import desenhar_poste
 from desenhos.grama import desenhar_grama
 from desenhos.arvore import desenhar_arvore
+from desenhos.planta import desenhar_planta
 from camera import get_camera
 from colisao import get_colisao
 
@@ -99,6 +100,10 @@ def main():
         desenhar_arvore(13,0)
         desenhar_arvore(-7,0)
         desenhar_arvore(-13,0)
+        desenhar_planta(3, 5)
+        desenhar_planta(3, -5)
+        desenhar_planta(-3, -5)
+        desenhar_planta(-3, 5)
 
         glfw.swap_buffers(window)
         glfw.poll_events()
