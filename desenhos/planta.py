@@ -29,7 +29,7 @@ def aplicar_material(material):
 def configurar_iluminacao():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
-    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_POSITION, [3.0, 6.0, 3.0, 1.0])
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.02, 0.02, 0.02, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1, 1, 1, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1.0])

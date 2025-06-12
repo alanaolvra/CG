@@ -25,15 +25,9 @@ def carregar_textura(path):
     glBindTexture(GL_TEXTURE_2D, textura)
 
     img = image.load(path)
-    width, height = img.get_size()
-
-    has_alpha = img.get_alpha() is not None
-    mode = "RGBA" if has_alpha else "RGB"
-    gl_format = GL_RGBA if has_alpha else GL_RGB
-
-    img_data = pygame.image.tostring(img, mode, True)
-
-    glTexImage2D(GL_TEXTURE_2D, 0, gl_format, width, height, 0, gl_format, GL_UNSIGNED_BYTE, img_data)
+    img_data = pygame.image.tostring(img, "RGB", 1)
+    width, height = img.get_rect().size
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
 
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)

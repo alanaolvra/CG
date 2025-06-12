@@ -1,4 +1,4 @@
-# Blender 4.4.1 MTL File: 'Low poly plant.blend'
+# Blender 4.4.1 MTL File: 'quit.blend'
 # www.blender.org
 
 newmtl ceramique
@@ -14,7 +14,7 @@ illum 3
 newmtl dirt
 Ns 150.000000
 Ka 1.000000 1.000000 1.000000
-Kd 0.600000  0.300000 0.150000
+Kd 0.600000 0.300000 0.150000
 Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.500000
@@ -22,7 +22,7 @@ d 1.000000
 illum 2
 
 newmtl leaf
-Ns 100.557861
+Ns 100.557884
 Ka 0.400000 0.400000 0.400000
 Kd 0.000000 0.553695 0.000000
 Ks 0.500000 0.500000 0.500000
