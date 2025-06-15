@@ -2,3 +2,4 @@ glfw==2.9.0
 PyOpenGL==3.1.9
 PyOpenGL-accelerate==3.1.9
 pygame==2.6.1
+objloader==0.2.0

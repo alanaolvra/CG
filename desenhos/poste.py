@@ -73,4 +73,7 @@ def desenhar_poste(lado):
         glEnd()
 
     glDisable(GL_LIGHTING)
+    glDisable(GL_LIGHT0)
+    glDisable(GL_NORMALIZE)
+
     glPopMatrix()
