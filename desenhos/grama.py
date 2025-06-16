@@ -5,8 +5,8 @@ def desenhar_grama(lado, textura_grama, repeat=10):
     glBindTexture(GL_TEXTURE_2D, textura_grama)
     glColor3f(1.0, 1.0, 1.0)
 
-    grama = 8  # tamanho do quadrado
-    y = 0.01  # levemente acima do chão
+    grama = 8  
+    y = 0.01
 
     glPushMatrix()
     glTranslatef(lado, 0, 0)

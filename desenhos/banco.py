@@ -5,17 +5,15 @@ def configurar_iluminacao():
     glEnable(GL_LIGHT0)
     glEnable(GL_COLOR_MATERIAL)
 
-    # Posição da luz
     glLightfv(GL_LIGHT0, GL_POSITION, [2.0, 5.0, 2.0, 1.0])
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.7, 0.7, 0.7, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
 
-    # Propriedades do material
     glMaterialfv(GL_FRONT, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
     glMaterialfv(GL_FRONT, GL_SHININESS, 50)
 
-def desenhar_cubo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura=None):
+def desenhar_retangulo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura=None):
     glPushMatrix()
     glTranslatef(x, y, z)
     glScalef(sx, sy, sz)
@@ -23,16 +21,16 @@ def desenhar_cubo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura=None
     if usar_textura and textura:
         glEnable(GL_TEXTURE_2D)
         glBindTexture(GL_TEXTURE_2D, textura)
-        glColor3f(1, 1, 1)  # Mantém cor branca para não interferir na textura
-        desenhar_cubo_unitario(repeat_x=sx, repeat_y=sz)
+        glColor3f(1, 1, 1)
+        desenhar_retangulo(repeat_x=sx, repeat_y=sz)
         glDisable(GL_TEXTURE_2D)
     else:
         glColor3f(0.1, 0.1, 0.1)
-        desenhar_cubo_unitario()
+        desenhar_retangulo()
 
     glPopMatrix()
 
-def desenhar_cubo_unitario(repeat_x=4, repeat_y=4):
+def desenhar_retangulo(repeat_x=4, repeat_y=4):
     glBegin(GL_QUADS)
 
     # Frente
@@ -89,15 +87,15 @@ def desenhar_banco_modular(pos_x=0, textura_madeira=None):
 
     if textura_madeira:
         # Assento
-        desenhar_cubo_escalado(0, altura_assento, -0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
-        desenhar_cubo_escalado(0, altura_assento,  0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
+        desenhar_retangulo_escalado(0, altura_assento, -0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
+        desenhar_retangulo_escalado(0, altura_assento,  0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
 
         # Encosto
         altura_encosto = 0.7
         glPushMatrix()
         glTranslatef(0, altura_encosto, -0.25)
         glRotatef(90, 1, 0, 0)
-        desenhar_cubo_escalado(0, 0, 0, comprimento_ripa, espessura, profundidade, True, textura_madeira)
+        desenhar_retangulo_escalado(0, 0, 0, comprimento_ripa, espessura, profundidade, True, textura_madeira)
         glPopMatrix()
     else:
         glColor3f(0.5, 0.3, 0.1)
@@ -108,8 +106,8 @@ def desenhar_banco_modular(pos_x=0, textura_madeira=None):
     offset_perna = largura_total / 2 - 0.1
 
     for suporte_x in [-offset_perna, offset_perna]:
-        desenhar_cubo_escalado(suporte_x, altura_assento / 2, 0.12, 0.05, altura_assento, 0.05)
-        desenhar_cubo_escalado(suporte_x, altura_encosto / 2, -0.25, 0.05, altura_encosto, 0.05)
+        desenhar_retangulo_escalado(suporte_x, altura_assento / 2, 0.12, 0.05, altura_assento, 0.05)
+        desenhar_retangulo_escalado(suporte_x, altura_encosto / 2, -0.25, 0.05, altura_encosto, 0.05)
 
     glPopMatrix()
 

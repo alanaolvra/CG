@@ -48,7 +48,7 @@ def desenhar_poste(lado):
     glPushMatrix()
     glShadeModel(GL_SMOOTH)
     glTranslatef(lado, 0, 0)
-    glScalef(0.2, 0.2, 0.2)  # Ajuste de escala se necessário
+    glScalef(0.2, 0.2, 0.2)
     glRotatef(90, 0, 1, 0)
     glEnable(GL_NORMALIZE)
 

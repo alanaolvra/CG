@@ -56,7 +56,6 @@ def desenhar_arvore(ladox, ladoz):
         if material:
             aplicar_material(material)
         else:
-            # Fallback para um material claro padrão
             glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.1, 0.05, 1.0])   # Marrom escuro
             glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.4, 0.2, 0.1, 1.0])    # Marrom
             glMaterialfv(GL_FRONT, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0])   # Pouco brilho

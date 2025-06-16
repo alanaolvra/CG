@@ -58,7 +58,6 @@ def desenhar_cristo():
         if material:
             aplicar_material(material)
         else:
-            # Fallback para um material claro padrão
             glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
             glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
             glMaterialfv(GL_FRONT, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
