@@ -5,15 +5,25 @@ import glfw
 
 class Camera:
     def __init__(self):
-        self.pos = np.array([0.0, 1.7, 15.0])
-        self.front = np.array([0.0, 0.0, -1.0])
-        self.up = np.array([0.0, 1.0, 0.0])
+        self.pos = np.array([0.0, 1.7, 15.0], dtype=np.float32)
+        self.front = np.array([0.0, 0.0, -1.0], dtype=np.float32)
+        self.up = np.array([0.0, 1.0, 0.0], dtype=np.float32)
         self.yaw = -90.0
         self.pitch = 0.0
         self.last_x = 400
         self.last_y = 300
         self.first_mouse = True
         self.cursor_enabled = False  # estado atual do cursor
+
+    def enable_cursor(self, window):
+        glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_NORMAL)
+        self.cursor_enabled = True
+        self.first_mouse = True
+
+    def disable_cursor(self, window):
+        glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
+        self.cursor_enabled = False
+        self.first_mouse = True
 
     def mouse_callback(self, window, xpos, ypos):
         if self.cursor_enabled:
@@ -24,48 +34,47 @@ class Camera:
             self.last_y = ypos
             self.first_mouse = False
 
-        xoffset = xpos - self.last_x
-        yoffset = self.last_y - ypos
+        xoffset = (xpos - self.last_x) * 0.1
+        yoffset = (self.last_y - ypos) * 0.1
         self.last_x = xpos
         self.last_y = ypos
 
-        sensitivity = 0.1
-        xoffset *= sensitivity
-        yoffset *= sensitivity
-
         self.yaw += xoffset
         self.pitch += yoffset
-
         self.pitch = max(min(self.pitch, 89.0), -89.0)
 
-        front = [
-            math.cos(math.radians(self.yaw)) * math.cos(math.radians(self.pitch)),
-            math.sin(math.radians(self.pitch)),
-            math.sin(math.radians(self.yaw)) * math.cos(math.radians(self.pitch))
-        ]
-        self.front = np.array(front) / np.linalg.norm(front)
+        yaw_rad = math.radians(self.yaw)
+        pitch_rad = math.radians(self.pitch)
+
+        front = np.array([
+            math.cos(yaw_rad) * math.cos(pitch_rad),
+            math.sin(pitch_rad),
+            math.sin(yaw_rad) * math.cos(pitch_rad)
+        ], dtype=np.float32)
+
+        self.front[:] = front / np.linalg.norm(front)
 
     def process_input(self, window, delta_time):
         speed = 2.5 * delta_time
+        right = np.cross(self.front, self.up)
+        move_dir = np.array([self.front[0], 0, self.front[2]])
+        move_dir = move_dir / np.linalg.norm(move_dir)
+
         if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
-            self.pos += speed * self.front
+            self.pos += speed * move_dir
         if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
-            self.pos -= speed * self.front
+            self.pos -= speed * move_dir
         if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
-            self.pos -= np.cross(self.front, self.up) * speed
+            self.pos -= right * speed
         if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
-            self.pos += np.cross(self.front, self.up) * speed
+            self.pos += right * speed
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
-            glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_NORMAL)
-            self.cursor_enabled = True
-            self.first_mouse = True
+            self.enable_cursor(window)
 
     def mouse_button_callback(self, window, button, action, mods):
         if button == glfw.MOUSE_BUTTON_LEFT and action == glfw.PRESS:
             if self.cursor_enabled:
-                glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
-                self.cursor_enabled = False
-                self.first_mouse = True 
+                self.disable_cursor(window)
 
 def get_camera():
     return Camera()

@@ -1,37 +1,98 @@
+# colisao.py
 import numpy as np
 
+objetos_colisao = {}
 class Colisao:
     def __init__(self):
-        self.torre_pos = np.array([0.0, 0.0, 0.0])
-        self.torre_size = np.array([1.0, 5.0, 1.0])
-        self.chao_y = 1.7 
+        self.objetos = {}
+        self.chao_y = 1.7
 
-    def checar_colisao_chao(self, camera_pos):
-        if camera_pos[1] < self.chao_y:
-            camera_pos[1] = self.chao_y
-        return camera_pos
+    def set_objetos(self, objetos):
+        """
+        Define as caixas de colisão do cenário.
+        objetos: dict {nome: {"min": [x,y,z], "max": [x,y,z]}}
+        """
+        self.objetos = objetos
 
-    def checar_colisao_torre(self, camera_pos):
-        torre_min = self.torre_pos - self.torre_size / 2
-        torre_max = self.torre_pos + self.torre_size / 2
+    def checar_colisoes(self, pos):
+        pos = np.copy(pos)
+        raio = 0.3
+        pos[1] = max(pos[1], self.chao_y)
 
-        buffer = 0.5
+        for nome, caixa in self.objetos.items():
+            if self._verificar_colisao(pos, caixa, raio):
+                # Corrige separadamente os eixos X e Z para permitir "deslizar"
+                for i in [0, 2]:  # eixo X (0) e Z (2)
+                    centro = (caixa['min'][i] + caixa['max'][i]) / 2
+                    metade = (caixa['max'][i] - caixa['min'][i]) / 2
+                    distancia = pos[i] - centro
+                    limite = metade + raio
 
-        if (torre_min[0] - buffer <= camera_pos[0] <= torre_max[0] + buffer and
-            torre_min[1] - buffer <= camera_pos[1] <= torre_max[1] + buffer and
-            torre_min[2] - buffer <= camera_pos[2] <= torre_max[2] + buffer):
-            
-            deslocamento = camera_pos - self.torre_pos
-            deslocamento[1] = 0 
-            deslocamento = deslocamento / np.linalg.norm(deslocamento) * (np.linalg.norm(self.torre_size)/2 + buffer)
-            camera_pos[:2] = self.torre_pos[:2] + deslocamento[:2]
-            
-        return camera_pos
+                    if abs(distancia) < limite:
+                        # Trava o movimento no eixo se ultrapassou o limite
+                        pos[i] = centro + np.sign(distancia) * limite
 
-    def checar_colisoes(self, camera_pos):
-        camera_pos = self.checar_colisao_chao(camera_pos)
-        camera_pos = self.checar_colisao_torre(camera_pos)
-        return camera_pos
+        return pos
+
+
+
+    def _verificar_colisao(self, pos, caixa, raio=0.3):
+        """
+        Verifica colisão entre uma esfera 2D (XZ) com raio e uma AABB.
+        """
+        # Posição da câmera
+        px, pz = pos[0], pos[2]
+
+        # Caixa do objeto
+        minx, maxx = caixa['min'][0], caixa['max'][0]
+        minz, maxz = caixa['min'][2], caixa['max'][2]
+
+        # Encontra o ponto mais próximo da caixa à posição (clamping)
+        closest_x = max(minx, min(px, maxx))
+        closest_z = max(minz, min(pz, maxz))
+
+        # Calcula distância entre ponto e a caixa
+        dx = px - closest_x
+        dz = pz - closest_z
+        dist_squared = dx * dx + dz * dz
+
+        return dist_squared < raio * raio
+
+
+# Funções utilitárias fora da classe
+
+def calcular_bounding_box(modelo):
+    """
+    Retorna a bounding box (AABB) de um modelo carregado com pywavefront.
+    """
+    if not modelo or not modelo.vertices:
+        return None
+
+    xs = [v[0] for v in modelo.vertices]
+    ys = [v[1] for v in modelo.vertices]
+    zs = [v[2] for v in modelo.vertices]
+
+    return {
+        "min": [min(xs), min(ys), min(zs)],
+        "max": [max(xs), max(ys), max(zs)],
+    }
+
+def transformar_bounding_box(caixa, escala, translacao):
+    """
+    Aplica escala e translação a uma bounding box.
+    escala: [sx, sy, sz]
+    translacao: [tx, ty, tz]
+    """
+    if not caixa:
+        return None
+
+    min_tr = [
+        caixa['min'][i] * escala[i] + translacao[i] for i in range(3)
+    ]
+    max_tr = [
+        caixa['max'][i] * escala[i] + translacao[i] for i in range(3)
+    ]
+    return {"min": min_tr, "max": max_tr}
 
 def get_colisao():
     return Colisao()

@@ -1,7 +1,10 @@
 from OpenGL.GL import *
 import pywavefront
+from colisao import objetos_colisao
+from colisao import calcular_bounding_box, transformar_bounding_box
 
 barraca_modelo = None
+barraca_display_list = None
 def carregar_barraca():
     global barraca_modelo, texturas_carregadas
     barraca_modelo = pywavefront.Wavefront(
@@ -49,6 +52,9 @@ def configurar_iluminacao():
 def desenhar_barraca(ladox, ladoz):
     if barraca_modelo is None:
         carregar_barraca()
+        bbox_barraca = calcular_bounding_box(barraca_modelo)
+        bbox_barraca = transformar_bounding_box(bbox_barraca, [0.3, 0.3, 0.3], [8, 0, 10])
+        objetos_colisao["Barraca"] = bbox_barraca
 
     glPushMatrix()
     configurar_iluminacao()

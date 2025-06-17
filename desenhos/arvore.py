@@ -1,9 +1,17 @@
 from OpenGL.GL import *
 import pywavefront
 
+from colisao import calcular_bounding_box, transformar_bounding_box
+
 arvore_modelo = None
+arvore_display_list = None
+
 def carregar_arvore():
-    global arvore_modelo
+    global arvore_modelo, arvore_display_list
+
+    if arvore_modelo is not None:
+        return  # já carregado
+
     arvore_modelo = pywavefront.Wavefront(
         'script/arvore.obj',
         create_materials=True,
@@ -12,40 +20,8 @@ def carregar_arvore():
         strict=False
     )
 
-def aplicar_material(material):
-    if material is not None:
-        if hasattr(material, 'ambient'):
-            glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
-        if hasattr(material, 'diffuse'):
-            glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
-        if hasattr(material, 'specular'):
-            glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
-        if hasattr(material, 'emissive'):
-            glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive)
-        if hasattr(material, 'shininess'):
-            glMaterialf(GL_FRONT, GL_SHININESS, min(material.shininess, 128.0))
-
-            
-def configurar_iluminacao():
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
-    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.01, 0.01, 0.01, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1, 1, 1, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1, 1, 1, 1.0])
-
-    glShadeModel(GL_SMOOTH)
-    glEnable(GL_NORMALIZE)
-
-def desenhar_arvore(ladox, ladoz):
-    if arvore_modelo is None:
-        carregar_arvore()
-
-    glPushMatrix()
-    glTranslatef(ladox, 0, ladoz)
-    glScalef(1, 1, 1)
-    
-    configurar_iluminacao()
+    arvore_display_list = glGenLists(1)
+    glNewList(arvore_display_list, GL_COMPILE)
 
     for mesh in arvore_modelo.mesh_list:
         material = None
@@ -54,11 +30,21 @@ def desenhar_arvore(ladox, ladoz):
             material = arvore_modelo.materials.get(material_name)
 
         if material:
-            aplicar_material(material)
+            if hasattr(material, 'ambient'):
+                glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
+            if hasattr(material, 'diffuse'):
+                glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
+            if hasattr(material, 'specular'):
+                glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
+            if hasattr(material, 'emissive'):
+                glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive)
+            if hasattr(material, 'shininess'):
+                glMaterialf(GL_FRONT, GL_SHININESS, min(material.shininess, 128.0))
         else:
-            glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.1, 0.05, 1.0])   # Marrom escuro
-            glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.4, 0.2, 0.1, 1.0])    # Marrom
-            glMaterialfv(GL_FRONT, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0])   # Pouco brilho
+            # Material default
+            glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.1, 0.05, 1.0])
+            glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.4, 0.2, 0.1, 1.0])
+            glMaterialfv(GL_FRONT, GL_SPECULAR, [0.1, 0.1, 0.1, 1.0])
             glMaterialf(GL_FRONT, GL_SHININESS, 20.0)
 
         glBegin(GL_TRIANGLES)
@@ -72,8 +58,30 @@ def desenhar_arvore(ladox, ladoz):
                 glVertex3f(*arvore_modelo.vertices[vertex_i][:3])
         glEnd()
 
+    glEndList()
+
+def desenhar_arvore(ladox, ladoz):
+    if arvore_display_list is None:
+        carregar_arvore()
+        objetos = {}
+        arvore_posicoes = [[7, 0, 0], [13, 0, 0], [-7, 0, 0], [-13, 0, 0]]
+        for i, pos in enumerate(arvore_posicoes):
+            bbox = calcular_bounding_box(arvore_modelo)
+            bbox = transformar_bounding_box(bbox, [0.2, 0.2, 0.2], pos)
+            objetos[f"Arvore{i}"] = bbox
+
+    glPushMatrix()
+    glTranslatef(ladox, 0, ladoz)
+    glScalef(1, 1, 1)
+
+    glEnable(GL_LIGHTING)
+    glEnable(GL_LIGHT0)
+    glEnable(GL_NORMALIZE)
+
+    glCallList(arvore_display_list)
+
     glDisable(GL_LIGHTING)
     glDisable(GL_LIGHT0)
     glDisable(GL_NORMALIZE)
-        
+
     glPopMatrix()

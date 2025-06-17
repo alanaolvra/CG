@@ -1,5 +1,6 @@
 from OpenGL.GL import *
 
+banco_display_list = None
 def configurar_iluminacao():
     glEnable(GL_LIGHTING)
     glEnable(GL_LIGHT0)
@@ -78,38 +79,46 @@ def desenhar_retangulo(repeat_x=4, repeat_y=4):
     glEnd()
 
 def desenhar_banco_modular(pos_x=0, textura_madeira=None):
+    global banco_display_list
+    if banco_display_list is None:
+        banco_display_list = glGenLists(1)
+        glNewList(banco_display_list, GL_COMPILE)
+
+        comprimento_ripa = 8
+        altura_assento = 0.4
+        espessura = 0.08
+        profundidade = 0.20
+        altura_encosto = 0.7
+        largura_total = comprimento_ripa
+        offset_perna = largura_total / 2 - 0.1
+
+        if textura_madeira:
+            # Assento
+            desenhar_retangulo_escalado(0, altura_assento, -0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
+            desenhar_retangulo_escalado(0, altura_assento,  0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
+
+            # Encosto
+            glPushMatrix()
+            glTranslatef(0, altura_encosto, -0.25)
+            glRotatef(90, 1, 0, 0)
+            desenhar_retangulo_escalado(0, 0, 0, comprimento_ripa, espessura, profundidade, True, textura_madeira)
+            glPopMatrix()
+        else:
+            glColor3f(0.5, 0.3, 0.1)
+
+        # Suportes
+        glColor3f(0.1, 0.1, 0.1)
+        for suporte_x in [-offset_perna, offset_perna]:
+            desenhar_retangulo_escalado(suporte_x, altura_assento / 2, 0.12, 0.05, altura_assento, 0.05)
+            desenhar_retangulo_escalado(suporte_x, altura_encosto / 2, -0.25, 0.05, altura_encosto, 0.05)
+
+        glEndList()
+
     glPushMatrix()
     glTranslatef(pos_x, 0, 0)
-    comprimento_ripa = 8
-    altura_assento = 0.4
-    espessura = 0.08
-    profundidade = 0.20
-
-    if textura_madeira:
-        # Assento
-        desenhar_retangulo_escalado(0, altura_assento, -0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
-        desenhar_retangulo_escalado(0, altura_assento,  0.12, comprimento_ripa, espessura, profundidade, True, textura_madeira)
-
-        # Encosto
-        altura_encosto = 0.7
-        glPushMatrix()
-        glTranslatef(0, altura_encosto, -0.25)
-        glRotatef(90, 1, 0, 0)
-        desenhar_retangulo_escalado(0, 0, 0, comprimento_ripa, espessura, profundidade, True, textura_madeira)
-        glPopMatrix()
-    else:
-        glColor3f(0.5, 0.3, 0.1)
-
-    # Suportes
-    glColor3f(0.1, 0.1, 0.1)
-    largura_total = comprimento_ripa
-    offset_perna = largura_total / 2 - 0.1
-
-    for suporte_x in [-offset_perna, offset_perna]:
-        desenhar_retangulo_escalado(suporte_x, altura_assento / 2, 0.12, 0.05, altura_assento, 0.05)
-        desenhar_retangulo_escalado(suporte_x, altura_encosto / 2, -0.25, 0.05, altura_encosto, 0.05)
-
+    glCallList(banco_display_list)
     glPopMatrix()
+
 
 def desenhar_bancos(lado, textura_madeira=None, distancia=4.28):
     glPushMatrix()

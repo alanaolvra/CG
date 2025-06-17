@@ -2,8 +2,8 @@ import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame
-from pygame import image
 from pygame.locals import *
+#from desenhos.pessoa import desenhar_pessoa
 from desenhos.chao import desenhar_chao
 from desenhos.fundo import desenhar_ceu
 from desenhos.relogio import desenhar_relogio
@@ -17,38 +17,33 @@ from desenhos.planta import desenhar_planta
 from desenhos.barraca import desenhar_barraca
 from camera import get_camera
 from colisao import get_colisao
+from textura import carregar_textura
+from colisao import objetos_colisao
 
 colisao = get_colisao()
 camera = get_camera()
-
-def carregar_textura(path):
-    textura = glGenTextures(1)
-    glBindTexture(GL_TEXTURE_2D, textura)
-
-    img = image.load(path)
-    img_data = pygame.image.tostring(img, "RGB", 1)
-    width, height = img.get_rect().size
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, img_data)
-
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-
-    return textura
 
 def init_window():
     if not glfw.init():
         return None
     window = glfw.create_window(1920, 1080, "Coluna da Hora - Russas", None, None)
     glfw.make_context_current(window)
+    glfw.swap_interval(1)
+
     glfw.set_cursor_pos_callback(window, camera.mouse_callback)
+    glfw.set_mouse_button_callback(window, camera.mouse_button_callback)
     glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
+    
     return window
+
 
 def main():
     pygame.init()
     window = init_window()
+    if window is None:
+        print("Erro ao inicializar janela.")
+        return
+
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
@@ -58,28 +53,30 @@ def main():
     gluPerspective(45, 1920 / 1080, 1, 100)
     glMatrixMode(GL_MODELVIEW)
 
+    # Carrega texturas uma vez
     chao_textura = carregar_textura("images/chao.png")
     textura_madeira = carregar_textura("images/banco.jpeg")
     textura_grama = carregar_textura("images/grama.png")
 
     last_frame = glfw.get_time()
+
     while not glfw.window_should_close(window):
         current_frame = glfw.get_time()
         delta_time = current_frame - last_frame
         last_frame = current_frame
 
         camera.process_input(window, delta_time)
-
+        
+        colisao.set_objetos(objetos_colisao)
         camera.pos = colisao.checar_colisoes(camera.pos)
+
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         center = camera.pos + camera.front
         gluLookAt(*camera.pos, *center, *camera.up)
 
-        glfw.set_cursor_pos_callback(window, camera.mouse_callback)
-        glfw.set_mouse_button_callback(window, camera.mouse_button_callback)
-        
+        # Renderiza cena
         desenhar_ceu()
         desenhar_chao(chao_textura)
         desenhar_relogio()
@@ -91,21 +88,23 @@ def main():
         desenhar_bancos(-10, textura_madeira)
         desenhar_poste(10)
         desenhar_poste(-10)
-        desenhar_arvore(7,0)
-        desenhar_arvore(13,0)
-        desenhar_arvore(-7,0)
-        desenhar_arvore(-13,0)
+        desenhar_arvore(7, 0)
+        desenhar_arvore(13, 0)
+        desenhar_arvore(-7, 0)
+        desenhar_arvore(-13, 0)
         desenhar_planta(3, 5)
         desenhar_planta(3, -5)
         desenhar_planta(-3, -5)
         desenhar_planta(-3, 5)
         desenhar_barraca(8, 10)
-
+        #desenhar_pessoa(7.6, 10)
 
         glfw.swap_buffers(window)
         glfw.poll_events()
 
     glfw.terminate()
+
+
 
 if __name__ == "__main__":
     main()
