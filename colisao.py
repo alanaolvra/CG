@@ -21,16 +21,28 @@ class Colisao:
 
         for nome, caixa in self.objetos.items():
             if self._verificar_colisao(pos, caixa, raio):
-                # Corrige separadamente os eixos X e Z para permitir "deslizar"
-                for i in [0, 2]:  # eixo X (0) e Z (2)
-                    centro = (caixa['min'][i] + caixa['max'][i]) / 2
-                    metade = (caixa['max'][i] - caixa['min'][i]) / 2
-                    distancia = pos[i] - centro
-                    limite = metade + raio
+                # Calcular distância do centro da caixa
+                centro_x = (caixa['min'][0] + caixa['max'][0]) / 2
+                centro_z = (caixa['min'][2] + caixa['max'][2]) / 2
 
-                    if abs(distancia) < limite:
-                        # Trava o movimento no eixo se ultrapassou o limite
-                        pos[i] = centro + np.sign(distancia) * limite
+                metade_x = (caixa['max'][0] - caixa['min'][0]) / 2
+                metade_z = (caixa['max'][2] - caixa['min'][2]) / 2
+
+                dist_x = pos[0] - centro_x
+                dist_z = pos[2] - centro_z
+
+                limite_x = metade_x + raio
+                limite_z = metade_z + raio
+
+                overlap_x = limite_x - abs(dist_x)
+                overlap_z = limite_z - abs(dist_z)
+
+                if overlap_x > 0 and overlap_z > 0:
+                    # Corrige apenas no eixo com menor sobreposição (deslizamento natural)
+                    if overlap_x < overlap_z:
+                        pos[0] = centro_x + np.sign(dist_x) * limite_x
+                    else:
+                        pos[2] = centro_z + np.sign(dist_z) * limite_z
 
         return pos
 
