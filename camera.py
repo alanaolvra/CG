@@ -3,6 +3,8 @@ import numpy as np
 import math
 import glfw
 
+from cobrinha.cobrinha import jogo_cobrinha
+
 class Camera:
     def __init__(self):
         self.pos = np.array([0.0, 1.7, 15.0], dtype=np.float32)
@@ -70,6 +72,8 @@ class Camera:
             self.pos += right * speed
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             self.enable_cursor(window)
+        if glfw.get_key(window, glfw.KEY_P) == glfw.PRESS:
+            jogo_cobrinha()
 
     def mouse_button_callback(self, window, button, action, mods):
         if button == glfw.MOUSE_BUTTON_LEFT and action == glfw.PRESS:
