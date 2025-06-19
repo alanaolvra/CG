@@ -3,7 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame
 from pygame.locals import *
-#from desenhos.pessoa import desenhar_pessoa
+from desenhos.pessoa import desenhar_pessoa
 from desenhos.chao import desenhar_chao
 from desenhos.fundo import desenhar_ceu
 from desenhos.pessoa import desenhar_pessoa
