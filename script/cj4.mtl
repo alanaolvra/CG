@@ -9,7 +9,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd C:/Users/paula/Downloads/cj-cracter/textures/sneakers.png
+map_Kd ../images/sneakers.png
 
 newmtl Mat.001
 Ns 200.000000
@@ -19,7 +19,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd C:/Users/paula/Downloads/cj-cracter/textures/pants.png
+map_Kd ../images/pants.png
 
 newmtl Mat.002
 Ns 200.000000
@@ -29,7 +29,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd C:/Users/paula/Downloads/cj-cracter/textures/face.png
+map_Kd ../images/face.png
 
 newmtl Mat.003
 Ns 200.000000
@@ -39,4 +39,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Kd C:/Users/paula/Downloads/cj-cracter/textures/torso.png
+map_Kd ../images/torso.png
