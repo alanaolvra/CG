@@ -53,7 +53,7 @@ def desenhar_barraca(ladox, ladoz):
     if barraca_modelo is None:
         carregar_barraca()
         bbox_barraca = calcular_bounding_box(barraca_modelo)
-        bbox_barraca = transformar_bounding_box(bbox_barraca, [0.3, 0.3, 0.3], [8, 0, 10])
+        bbox_barraca = transformar_bounding_box(bbox_barraca, [0.5, 0.5, 1], [8, 0, 10])
         objetos_colisao["Barraca"] = bbox_barraca
 
     glPushMatrix()

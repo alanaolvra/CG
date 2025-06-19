@@ -1,8 +1,6 @@
 from OpenGL.GL import *
 import pywavefront
 
-from colisao import calcular_bounding_box, transformar_bounding_box
-
 arvore_modelo = None
 arvore_display_list = None
 
@@ -63,13 +61,7 @@ def carregar_arvore():
 def desenhar_arvore(ladox, ladoz):
     if arvore_display_list is None:
         carregar_arvore()
-        objetos = {}
-        arvore_posicoes = [[7, 0, 0], [13, 0, 0], [-7, 0, 0], [-13, 0, 0]]
-        for i, pos in enumerate(arvore_posicoes):
-            bbox = calcular_bounding_box(arvore_modelo)
-            bbox = transformar_bounding_box(bbox, [0.2, 0.2, 0.2], pos)
-            objetos[f"Arvore{i}"] = bbox
-
+        
     glPushMatrix()
     glTranslatef(ladox, 0, ladoz)
     glScalef(1, 1, 1)
