@@ -18,6 +18,7 @@ from desenhos.planta import desenhar_planta
 from desenhos.barraca import desenhar_barraca
 from camera import get_camera
 from colisao import get_colisao
+import dialogo
 from textura import carregar_textura
 from colisao import objetos_colisao
 
@@ -34,8 +35,13 @@ def init_window():
     glfw.set_cursor_pos_callback(window, camera.mouse_callback)
     glfw.set_mouse_button_callback(window, camera.mouse_button_callback)
     glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
-    
+
+    # Adiciona os novos callbacks de teclado
+    glfw.set_key_callback(window, dialogo.tratar_evento_tecla)
+    glfw.set_char_callback(window, dialogo.tratar_evento_char)
+
     return window
+
 
 
 def main():
@@ -70,6 +76,7 @@ def main():
         
         colisao.set_objetos(objetos_colisao)
         camera.pos = colisao.checar_colisoes(camera.pos)
+        
 
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
@@ -100,8 +107,12 @@ def main():
         desenhar_barraca(8, 10)
         desenhar_pessoa(5.6, 10.2)
 
-        glfw.swap_buffers(window)
+        if dialogo.is_dialogo_ativo():
+            dialogo.desenhar_overlay(delta_time)
+
+        glfw.swap_buffers(window)   
         glfw.poll_events()
+
 
     glfw.terminate()
 

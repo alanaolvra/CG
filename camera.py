@@ -1,9 +1,12 @@
 # camera.py
+
 import numpy as np
 import math
 import glfw
 
 from cobrinha.cobrinha import jogo_cobrinha
+from dialogo import estar_perto_da_pessoa, iniciar_dialogo, is_dialogo_ativo
+import dialogo
 
 class Camera:
     def __init__(self):
@@ -15,7 +18,8 @@ class Camera:
         self.last_x = 400
         self.last_y = 300
         self.first_mouse = True
-        self.cursor_enabled = False  # estado atual do cursor
+        self.cursor_enabled = False
+        self.f_key_pressed = False
 
     def enable_cursor(self, window):
         glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_NORMAL)
@@ -62,23 +66,39 @@ class Camera:
         move_dir = np.array([self.front[0], 0, self.front[2]])
         move_dir = move_dir / np.linalg.norm(move_dir)
 
-        if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
-            self.pos += speed * move_dir
-        if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
-            self.pos -= speed * move_dir
-        if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
-            self.pos -= right * speed
-        if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
-            self.pos += right * speed
+        # Só permite movimento se o diálogo não estiver ativo
+        if not is_dialogo_ativo():
+            if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
+                self.pos += speed * move_dir
+            if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
+                self.pos -= speed * move_dir
+            if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
+                self.pos -= right * speed
+            if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
+                self.pos += right * speed
+            if glfw.get_key(window, glfw.KEY_P) == glfw.PRESS:
+                jogo_cobrinha()
+
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             self.enable_cursor(window)
-        if glfw.get_key(window, glfw.KEY_P) == glfw.PRESS:
-            jogo_cobrinha()
+        
+
+        # Permite iniciar ou encerrar diálogo mesmo com ele já ativo
+        if glfw.get_key(window, glfw.KEY_LEFT_CONTROL) == glfw.PRESS:
+            if not self.f_key_pressed:
+                self.f_key_pressed = True
+                if is_dialogo_ativo():
+                    dialogo.encerrar_dialogo()
+                else:
+                    if dialogo.estar_perto_da_pessoa(self.pos, self.front):
+                        dialogo.iniciar_dialogo()
+        else:
+            self.f_key_pressed = False
 
     def mouse_button_callback(self, window, button, action, mods):
         if button == glfw.MOUSE_BUTTON_LEFT and action == glfw.PRESS:
             if self.cursor_enabled:
-                self.disable_cursor(window)
+                self.disable_cursor(window)            
 
 def get_camera():
     return Camera()

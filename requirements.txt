@@ -3,3 +3,7 @@ PyOpenGL==3.1.9
 PyOpenGL-accelerate==3.1.9
 pygame==2.6.1
 objloader==0.2.0
+
+python-dotenv
+openai==1.76.0
+langchain_openai==0.3.16
