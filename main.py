@@ -6,6 +6,7 @@ from pygame.locals import *
 #from desenhos.pessoa import desenhar_pessoa
 from desenhos.chao import desenhar_chao
 from desenhos.fundo import desenhar_ceu
+from desenhos.pessoa import desenhar_pessoa
 from desenhos.relogio import desenhar_relogio
 from desenhos.torre import desenhar_torre
 from desenhos.cristo import desenhar_cristo
@@ -97,7 +98,7 @@ def main():
         desenhar_planta(-3, -5)
         desenhar_planta(-3, 5)
         desenhar_barraca(8, 10)
-        #desenhar_pessoa(7.6, 10)
+        desenhar_pessoa(5.6, 10.2)
 
         glfw.swap_buffers(window)
         glfw.poll_events()
