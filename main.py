@@ -19,6 +19,8 @@ from desenhos.grama import desenhar_grama
 from desenhos.restaurante import desenhar_restaurante
 from desenhos.palmeira import desenhar_palmeira
 from desenhos.burguer import desenhar_burguer
+from desenhos.grade import desenhar_grade
+from desenhos.agua import desenhar_agua
 from camera import get_camera
 from colisao import get_colisao
 import dialogo
@@ -67,6 +69,7 @@ def main():
     chao_textura = carregar_textura("images/chao.png")
     textura_madeira = carregar_textura("images/banco.jpeg")
     textura_grama = carregar_textura("images/grama.png")
+    textura_agua = carregar_textura("images/agua.png")
 
     last_frame = glfw.get_time()
 
@@ -109,7 +112,8 @@ def main():
         desenhar_ceramica(-3, -10)
         desenhar_frutas(4, -10)
         desenhar_restaurante(-10, 12)
-        
+        desenhar_agua(0, textura_agua)
+        desenhar_grade(-0.2, -0.2)
 
         if dialogo.is_dialogo_ativo():
             dialogo.desenhar_overlay(delta_time)
