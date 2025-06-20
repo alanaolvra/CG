@@ -13,9 +13,10 @@ from desenhos.cristo import desenhar_cristo
 from desenhos.banco import desenhar_bancos
 from desenhos.poste import desenhar_poste
 from desenhos.grama import desenhar_grama
-from desenhos.arvore import desenhar_arvore
-from desenhos.planta import desenhar_planta
-from desenhos.barraca import desenhar_barraca
+from desenhos.artesanato import desenhar_artesanato
+from desenhos.cafe import desenhar_cafe
+from desenhos.palmeira import desenhar_palmeira
+from desenhos.burguer import desenhar_burguer
 from camera import get_camera
 from colisao import get_colisao
 import dialogo
@@ -96,16 +97,15 @@ def main():
         desenhar_bancos(-10, textura_madeira)
         desenhar_poste(10)
         desenhar_poste(-10)
-        desenhar_arvore(7, 0)
-        desenhar_arvore(13, 0)
-        desenhar_arvore(-7, 0)
-        desenhar_arvore(-13, 0)
-        desenhar_planta(3, 5)
-        desenhar_planta(3, -5)
-        desenhar_planta(-3, -5)
-        desenhar_planta(-3, 5)
-        desenhar_barraca(8, 10)
+        desenhar_palmeira(7, 0)
+        desenhar_palmeira(13, 0)
+        desenhar_palmeira(-7, 0)
+        desenhar_palmeira(-13, 0)
+        desenhar_burguer(10, 10.5)
         desenhar_pessoa(5.6, 10.2)
+        desenhar_artesanato(-10, -10)
+        desenhar_cafe(-10, 12)
+        
 
         if dialogo.is_dialogo_ativo():
             dialogo.desenhar_overlay(delta_time)
