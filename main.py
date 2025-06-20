@@ -3,18 +3,20 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import pygame
 from pygame.locals import *
+from desenhos.ceramica import desenhar_ceramica
+from desenhos.frutas import desenhar_frutas
 from desenhos.pessoa import desenhar_pessoa
 from desenhos.chao import desenhar_chao
 from desenhos.fundo import desenhar_ceu
 from desenhos.pessoa import desenhar_pessoa
 from desenhos.relogio import desenhar_relogio
+from desenhos.tapetes import desenhar_tapete
 from desenhos.torre import desenhar_torre
 from desenhos.cristo import desenhar_cristo
 from desenhos.banco import desenhar_bancos
 from desenhos.poste import desenhar_poste
 from desenhos.grama import desenhar_grama
-from desenhos.feira import desenhar_feira
-from desenhos.cafe import desenhar_cafe
+from desenhos.restaurante import desenhar_restaurante
 from desenhos.palmeira import desenhar_palmeira
 from desenhos.burguer import desenhar_burguer
 from camera import get_camera
@@ -103,8 +105,10 @@ def main():
         desenhar_palmeira(-13, 0)
         desenhar_burguer(10, 10.5)
         desenhar_pessoa(5.6, 10.2)
-        desenhar_feira(-10, -10)
-        desenhar_cafe(-10, 12)
+        desenhar_tapete(-8, -10)
+        desenhar_ceramica(-3, -10)
+        desenhar_frutas(4, -10)
+        desenhar_restaurante(-10, 12)
         
 
         if dialogo.is_dialogo_ativo():

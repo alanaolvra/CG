@@ -1,0 +1,12 @@
+# Blender 4.4.1 MTL File: 'None'
+# www.blender.org
+
+newmtl Texture_buildings1
+Ns 37.215584
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd ../images/restaurante.png
+map_d ../images/restaurante.png
