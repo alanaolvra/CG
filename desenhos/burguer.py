@@ -105,7 +105,7 @@ def desenhar_burguer(ladox, ladoz):
     if burguer_modelo is None:
         carregar_burguer()
         bbox_burguer = calcular_bounding_box(burguer_modelo)
-        bbox_burguer = transformar_bounding_box(bbox_burguer, [1.5, 1, 1.2], [10, 0, 10.5])
+        bbox_burguer = transformar_bounding_box(bbox_burguer, [1.5, 1, 1.2], [10, 0, 12.5])
         objetos_colisao["burguer"] = bbox_burguer
 
     glPushMatrix()

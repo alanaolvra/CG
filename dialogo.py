@@ -6,7 +6,7 @@ import numpy as np
 
 from Agente.extrair import extrair_dados
 
-pos_pessoa = np.array([5.6, 1.5, 10.2], dtype=np.float32)
+pos_pessoa = np.array([5, 1.5, 12], dtype=np.float32)
 DISTANCIA_INTERACAO = 1.5
 
 mensagens_dialogo = []  # lista de strings

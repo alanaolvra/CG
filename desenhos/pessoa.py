@@ -107,7 +107,7 @@ def desenhar_pessoa(ladox, ladoz):
     if pessoa_modelo is None:
         carregar_pessoa()
         bbox_pessoa = calcular_bounding_box(pessoa_modelo)
-        bbox_pessoa = transformar_bounding_box(bbox_pessoa, [0.05, 0.05, 0.05], [9, 0, 10])
+        bbox_pessoa = transformar_bounding_box(bbox_pessoa, [0.05, 0.05, 0.05], [5, 0, 12])
         objetos_colisao["Pessoa"] = bbox_pessoa
 
     glPushMatrix()
