@@ -13,7 +13,7 @@ from desenhos.cristo import desenhar_cristo
 from desenhos.banco import desenhar_bancos
 from desenhos.poste import desenhar_poste
 from desenhos.grama import desenhar_grama
-from desenhos.artesanato import desenhar_artesanato
+from desenhos.feira import desenhar_feira
 from desenhos.cafe import desenhar_cafe
 from desenhos.palmeira import desenhar_palmeira
 from desenhos.burguer import desenhar_burguer
@@ -103,7 +103,7 @@ def main():
         desenhar_palmeira(-13, 0)
         desenhar_burguer(10, 10.5)
         desenhar_pessoa(5.6, 10.2)
-        desenhar_artesanato(-10, -10)
+        desenhar_feira(-10, -10)
         desenhar_cafe(-10, 12)
         
 
