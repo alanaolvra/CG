@@ -91,12 +91,12 @@ def configurar_iluminacao():
     glLightfv(GL_LIGHT0, GL_SPECULAR, [0.0, 0.0, 0.0, 1.0])
     glLightfv(GL_LIGHT0, GL_POSITION, [8.0, 5.0, 14.0, 1.0])
 
-    #LUZ 2: DE FRENTE (DIRECIONAL)
+    #LUZ 2: De trás (DIRECIONAL)
     glEnable(GL_LIGHT1)
     glLightfv(GL_LIGHT1, GL_AMBIENT, [0.01, 0.01, 0.01, 1.0])
     glLightfv(GL_LIGHT1, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
     glLightfv(GL_LIGHT1, GL_SPECULAR, [0.0, 0.0, 0.0, 1.0])
-    glLightfv(GL_LIGHT1, GL_POSITION, [0.0, 0.0, 1.0, 0.0])
+    glLightfv(GL_LIGHT1, GL_POSITION, [-1.0, 0.0, -1.0, 0.0])
 
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
