@@ -84,7 +84,7 @@ def configurar_iluminacao():
     
     #LUZ 1: DE CIMA (POSICIONAL)
     glEnable(GL_LIGHT0)
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [1, 1, 1, 1.0])
+    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [0.0, 0.0, 0.0, 1.0])
     glLightfv(GL_LIGHT0, GL_POSITION, [8.0, 5.0, 14.0, 1.0])
@@ -93,20 +93,18 @@ def configurar_iluminacao():
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
 
-def desenhar_grade(ladox, ladoz):
+def desenhar_grade():
     global grade_modelo, grade_display_list
 
     if grade_modelo is None:
         carregar_grade()
         bbox_grade = calcular_bounding_box(grade_modelo)
-        bbox_grade = transformar_bounding_box(bbox_grade, [0.8, 0.8, 0.8], [-0.2, 0, -0.2])
+        bbox_grade = transformar_bounding_box(bbox_grade, [0.8, 0.8, 0.8], [0, 0, 0])
         objetos_colisao["grade"] = bbox_grade
 
     glPushMatrix()
     configurar_iluminacao()
-    glDisable(GL_CULL_FACE)
 
-    glTranslatef(ladox, 0, ladoz)
     glScalef(0.5, 0.5, 0.5)
 
     if grade_display_list:
@@ -114,4 +112,6 @@ def desenhar_grade(ladox, ladoz):
 
     glDisable(GL_TEXTURE_2D)
     glDisable(GL_LIGHTING)
+    glDisable(GL_LIGHT0)
+    glDisable(GL_NORMALIZE)
     glPopMatrix()

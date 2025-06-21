@@ -112,8 +112,8 @@ def main():
         desenhar_ceramica(-3, -10)
         desenhar_frutas(4, -10)
         desenhar_restaurante(-10, 12)
-        desenhar_agua(0, textura_agua)
-        desenhar_grade(-0.2, -0.2)
+        desenhar_agua(textura_agua)
+        desenhar_grade()
 
         if dialogo.is_dialogo_ativo():
             dialogo.desenhar_overlay(delta_time)
