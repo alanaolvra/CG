@@ -4,7 +4,6 @@ import numpy as np
 import math
 import glfw
 
-from cobrinha.cobrinha import jogo_cobrinha
 from dialogo import estar_perto_da_pessoa, iniciar_dialogo, is_dialogo_ativo
 import dialogo
 
@@ -76,8 +75,6 @@ class Camera:
                 self.pos -= right * speed
             if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
                 self.pos += right * speed
-            if glfw.get_key(window, glfw.KEY_P) == glfw.PRESS:
-                jogo_cobrinha()
 
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             self.enable_cursor(window)
