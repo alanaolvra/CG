@@ -51,7 +51,7 @@ def carregar_burguer():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        print("[✓] Modelo burguer carregado e cacheado com sucesso")
+        #print("[✓] Modelo burguer carregado e cacheado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo burguer: {e}")
@@ -87,14 +87,14 @@ def configurar_iluminacao():
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.02, 0.02, 0.02, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [0.0, 0.0, 0.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_POSITION, [8.0, 5.0, 14.0, 1.0])
+    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 14.0, 1.0])
 
     #LUZ 2: DE FRENTE (DIRECIONAL)
     glEnable(GL_LIGHT1)
     glLightfv(GL_LIGHT1, GL_AMBIENT, [0.01, 0.01, 0.01, 1.0])
     glLightfv(GL_LIGHT1, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
     glLightfv(GL_LIGHT1, GL_SPECULAR, [0.0, 0.0, 0.0, 1.0])
-    glLightfv(GL_LIGHT1, GL_POSITION, [-1.0, 1.0, -1.0, 0.0])
+    glLightfv(GL_LIGHT1, GL_POSITION, [1.0, 1.0, -1.0, 0.0])
 
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
@@ -105,7 +105,7 @@ def desenhar_burguer(ladox, ladoz):
     if burguer_modelo is None:
         carregar_burguer()
         bbox_burguer = calcular_bounding_box(burguer_modelo)
-        bbox_burguer = transformar_bounding_box(bbox_burguer, [1.5, 1, 1.2], [10, 0, 12.5])
+        bbox_burguer = transformar_bounding_box(bbox_burguer, [1.5, 1, 1.4], [10, 0, 12.5])
         objetos_colisao["burguer"] = bbox_burguer
 
     glPushMatrix()

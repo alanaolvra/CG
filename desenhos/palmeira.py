@@ -51,7 +51,7 @@ def carregar_palmeira():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        print("[✓] Modelo palmeira carregado e cacheado com sucesso")
+        #print("[✓] Modelo palmeira carregado e cacheado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo palmeira: {e}")

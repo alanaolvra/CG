@@ -63,7 +63,7 @@ def carregar_textura_PIL(path):
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
-        print(f"[✓] Textura carregada com PIL: {path}")
+        #print(f"[✓] Textura carregada com PIL: {path}")
         return textura
 
     except Exception as e:

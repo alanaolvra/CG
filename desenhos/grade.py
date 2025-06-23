@@ -51,7 +51,7 @@ def carregar_grade():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        print("[✓] Modelo grade carregado e cacheado com sucesso")
+        #print("[✓] Modelo grade carregado e cacheado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo grade: {e}")

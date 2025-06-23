@@ -51,7 +51,7 @@ def carregar_frutas():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        print("[✓] Modelo frutas carregado e cacheado com sucesso")
+        #print("[✓] Modelo frutas carregado e cacheado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo frutas: {e}")

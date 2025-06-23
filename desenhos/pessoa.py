@@ -53,7 +53,7 @@ def carregar_pessoa():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        print("[✓] Modelo barraca carregado e cacheado com sucesso")
+        #print("[✓] Modelo barraca carregado e cacheado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo barraca: {e}")

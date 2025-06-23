@@ -1,6 +1,7 @@
 import glfw
 from OpenGL.GL import *
 from OpenGL.GLU import *
+from PIL import Image
 import pygame
 from pygame.locals import *
 from desenhos.ceramica import desenhar_ceramica
@@ -21,6 +22,7 @@ from desenhos.palmeira import desenhar_palmeira
 from desenhos.burguer import desenhar_burguer
 from desenhos.grade import desenhar_grade
 from desenhos.agua import desenhar_agua
+from desenhos.fundo import desenhar_ceu
 from camera import get_camera
 from colisao import get_colisao
 import dialogo
@@ -34,6 +36,8 @@ def init_window():
     if not glfw.init():
         return None
     window = glfw.create_window(1920, 1080, "Coluna da Hora - Russas", None, None)
+    icon = "images/icon.jpg"
+    glfw.set_window_icon(window, 1, Image.open(icon))
     glfw.make_context_current(window)
     glfw.swap_interval(1)
 
@@ -46,8 +50,6 @@ def init_window():
     glfw.set_char_callback(window, dialogo.tratar_evento_char)
 
     return window
-
-
 
 def main():
     pygame.init()
@@ -96,22 +98,22 @@ def main():
         desenhar_relogio()
         desenhar_torre()
         desenhar_cristo()
-        desenhar_grama(10, textura_grama)
-        desenhar_grama(-10, textura_grama)
         desenhar_bancos(10, textura_madeira)
         desenhar_bancos(-10, textura_madeira)
+        desenhar_grama(10, textura_grama)
+        desenhar_grama(-10, textura_grama)
         desenhar_poste(10)
         desenhar_poste(-10)
         desenhar_palmeira(7, 0)
         desenhar_palmeira(13, 0)
         desenhar_palmeira(-7, 0)
         desenhar_palmeira(-13, 0)
+        desenhar_restaurante(-10, 12)
         desenhar_burguer(10, 12.5)
         desenhar_pessoa(5, 12)
         desenhar_tapete(-8, -10)
         desenhar_ceramica(-3, -10)
         desenhar_frutas(4, -10)
-        desenhar_restaurante(-10, 12)
         desenhar_agua(textura_agua)
         desenhar_grade()
 
@@ -123,8 +125,6 @@ def main():
 
 
     glfw.terminate()
-
-
 
 if __name__ == "__main__":
     main()

@@ -51,7 +51,7 @@ def carregar_ceramica():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        print("[✓] Modelo ceramica carregado e cacheado com sucesso")
+        #print("[✓] Modelo ceramica carregado e cacheado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo ceramica: {e}")
