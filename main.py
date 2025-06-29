@@ -26,7 +26,7 @@ from desenhos.fundo import desenhar_ceu
 from camera import get_camera
 from colisao import get_colisao
 import dialogo
-from textura import carregar_textura
+from textura import carregar_textura, carregar_textura_PIL
 from colisao import objetos_colisao
 
 colisao = get_colisao()
@@ -72,7 +72,8 @@ def main():
     textura_madeira = carregar_textura("images/banco.jpeg")
     textura_grama = carregar_textura("images/grama.png")
     textura_agua = carregar_textura("images/agua.png")
-
+    textura_rua = carregar_textura_PIL("images/rua.jpg")
+    textura_ceu = carregar_textura_PIL("images/ceu.jpg")
     last_frame = glfw.get_time()
 
     while not glfw.window_should_close(window):
@@ -93,7 +94,7 @@ def main():
         gluLookAt(*camera.pos, *center, *camera.up)
 
         # Renderiza cena
-        desenhar_ceu()
+        desenhar_ceu(textura_rua, textura_ceu)
         desenhar_chao(chao_textura)
         desenhar_relogio()
         desenhar_torre()

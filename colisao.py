@@ -5,7 +5,7 @@ objetos_colisao = {}
 class Colisao:
     def __init__(self):
         self.objetos = {}
-        self.chao_y = 1.7
+        self.chao_y = 1.2
 
     def set_objetos(self, objetos):
         """

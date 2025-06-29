@@ -9,7 +9,7 @@ import dialogo
 
 class Camera:
     def __init__(self):
-        self.pos = np.array([0.0, 1.7, 15.0], dtype=np.float32)
+        self.pos = np.array([0.0, 1.2, 15.0], dtype=np.float32)
         self.front = np.array([0.0, 0.0, -1.0], dtype=np.float32)
         self.up = np.array([0.0, 1.0, 0.0], dtype=np.float32)
         self.yaw = -90.0
@@ -65,22 +65,27 @@ class Camera:
         move_dir = np.array([self.front[0], 0, self.front[2]])
         move_dir = move_dir / np.linalg.norm(move_dir)
 
-        # Só permite movimento se o diálogo não estiver ativo
+        nova_pos = self.pos.copy()
+
         if not is_dialogo_ativo():
             if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
-                self.pos += speed * move_dir
+                nova_pos += speed * move_dir
             if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
-                self.pos -= speed * move_dir
+                nova_pos -= speed * move_dir
             if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
-                self.pos -= right * speed
+                nova_pos -= right * speed
             if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
-                self.pos += right * speed
+                nova_pos += right * speed
+
+        # Clamping nos limites da cena [-20, 20] em X e Z
+        nova_pos[0] = max(-19.2, min(19.2, nova_pos[0]))
+        nova_pos[2] = max(-19.2, min(19.2, nova_pos[2]))
+
+        self.pos = nova_pos
 
         if glfw.get_key(window, glfw.KEY_ESCAPE) == glfw.PRESS:
             self.enable_cursor(window)
-        
 
-        # Permite iniciar ou encerrar diálogo mesmo com ele já ativo
         if glfw.get_key(window, glfw.KEY_LEFT_CONTROL) == glfw.PRESS:
             if not self.f_key_pressed:
                 self.f_key_pressed = True
