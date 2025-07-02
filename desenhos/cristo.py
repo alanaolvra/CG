@@ -1,8 +1,7 @@
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import numpy as np
 import pywavefront
-from colisao import objetos_colisao
-from colisao import calcular_bounding_box, transformar_bounding_box
 
 cristo_modelo = None
 cristo_display_list = None
@@ -17,33 +16,34 @@ def carregar_cristo():
         strict=False
     )
 
-def aplicar_material(material):
-    if material is not None:
-        if hasattr(material, 'ambient'):
-            glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
-        if hasattr(material, 'diffuse'):
-            glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
-        if hasattr(material, 'specular'):
-            glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
-        if hasattr(material, 'emissive'):
-            glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive)
-        if hasattr(material, 'shininess'):
-            glMaterialf(GL_FRONT, GL_SHININESS, min(material.shininess, 128.0))
+def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
+                     luz_pos=np.array([5.0, 10.0, 10.0]),
+                     luz_amb=np.array([0.5, 0.5, 0.5]),
+                     luz_diff=np.array([1.0, 1.0, 1.0]),
+                     luz_spec=np.array([1.0, 1.0, 1.0])):
+    #Reflexão ambiente
+    ambient = luz_amb * mat_amb
+    
+    #Reflexão difusa
+    L = luz_pos - P
+    L = L / np.linalg.norm(L)
+    N = normal / np.linalg.norm(normal)
+    diff = luz_diff * mat_diff * max(np.dot(L, N), 0.0)
 
-def configurar_iluminacao():
-    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 5.0, 5.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+    #Reflexão especular
+    V = cam_pos - P
+    V = V / np.linalg.norm(V)
+    R = 2 * np.dot(N, L) * N - L
+    spec = luz_spec * mat_spec * (max(np.dot(V, R), 0.0) ** mat_shine)
+
+    cor = ambient + diff + spec
+    return np.clip(cor, 0.0, 1.0)
 
 def desenhar_cristo():
     global cristo_modelo, cristo_display_list
 
     if cristo_modelo is None:
         carregar_cristo()
-        bbox_cristo = calcular_bounding_box(cristo_modelo)
-        bbox_cristo = transformar_bounding_box(bbox_cristo, [0.08, 0.08, 0.08], [0, 5.06, 0])
-        objetos_colisao["Cristo"] = bbox_cristo
 
     if cristo_display_list is None:
         cristo_display_list = glGenLists(1)
@@ -55,42 +55,59 @@ def desenhar_cristo():
         glScalef(0.08, 0.08, 0.08)
 
         for mesh in cristo_modelo.mesh_list:
-            material = None
+            # Material base (ou valores fixos)
+            mat_amb=np.array([1.0, 1.0, 1.0])
+            mat_diff=np.array([1.0, 1.0, 1.0])
+            mat_spec=np.array([1.0, 1.0, 1.0])
+            mat_shine=128.0
+
             if mesh.materials:
                 material_name = mesh.materials[0].name
                 material = cristo_modelo.materials.get(material_name)
-
-            if material:
-                aplicar_material(material)
-            else:
-                glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-                glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])
-                glMaterialfv(GL_FRONT, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-                glMaterialf(GL_FRONT, GL_SHININESS, 50.0)
+                if material:
+                    if hasattr(material, 'ambient'):
+                        mat_amb = np.array(material.ambient[:3])
+                    if hasattr(material, 'diffuse'):
+                        mat_diff = np.array(material.diffuse[:3])
+                    if hasattr(material, 'specular'):
+                        mat_spec = np.array(material.specular[:3])
+                    if hasattr(material, 'shininess'):
+                        mat_shine = float(material.shininess)
 
             glBegin(GL_TRIANGLES)
             for face in mesh.faces:
                 for vertex_i in face:
-                    if cristo_modelo.parser.normals:
-                        try:
-                            glNormal3f(*cristo_modelo.parser.normals[vertex_i])
-                        except IndexError:
-                            glNormal3f(0.0, 1.0, 0.0)  # normal default
-                    glVertex3f(*cristo_modelo.vertices[vertex_i])
+                    P = np.array(cristo_modelo.vertices[vertex_i])
+                    try:
+                        normal = np.array(cristo_modelo.parser.normals[vertex_i])
+                    except (IndexError, AttributeError):
+                        normal = np.array([0.0, 1.0, 0.0])
+
+                    cor = phong_iluminacao(
+                        P,
+                        cam_pos=np.array([0.0, 0.0, 20.0]),
+                        normal=normal,
+                        mat_amb=mat_amb,
+                        mat_diff=mat_diff,
+                        mat_spec=mat_spec,
+                        mat_shine=mat_shine
+                    )
+
+
+                    glColor3f(*cor)
+                    glNormal3f(*normal)
+                    glVertex3f(*P)
             glEnd()
 
         glPopMatrix()
         glEndList()
 
-    # Renderização real
+    # Renderização
     glPushMatrix()
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
+    glDisable(GL_LIGHTING)
     glEnable(GL_NORMALIZE)
 
     glCallList(cristo_display_list)
 
-    glDisable(GL_LIGHTING)
-    glDisable(GL_LIGHT0)
     glDisable(GL_NORMALIZE)
     glPopMatrix()

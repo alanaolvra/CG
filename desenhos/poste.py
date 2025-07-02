@@ -1,4 +1,5 @@
 from OpenGL.GL import *
+import numpy as np
 import pywavefront
 
 poste_modelo = None
@@ -14,29 +15,30 @@ def carregar_poste():
         strict=False
     )
 
-def aplicar_material(material):
-    if material:
-        if hasattr(material, 'ambient'):
-            glMaterialfv(GL_FRONT, GL_AMBIENT, material.ambient)
-        if hasattr(material, 'diffuse'):
-            glMaterialfv(GL_FRONT, GL_DIFFUSE, material.diffuse)
-        if hasattr(material, 'specular'):
-            glMaterialfv(GL_FRONT, GL_SPECULAR, material.specular)
-        if hasattr(material, 'emissive'):
-            glMaterialfv(GL_FRONT, GL_EMISSION, material.emissive)
-        if hasattr(material, 'shininess'):
-            glMaterialf(GL_FRONT, GL_SHININESS, min(material.shininess, 128.0))
+def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
+                     luz_pos=np.array([5.0, 10.0, 5.0]),
+                     luz_amb=np.array([0.5, 0.5, 0.5]),
+                     luz_diff=np.array([1.0, 1.0, 1.0]),
+                     luz_spec=np.array([1.0, 1.0, 1.0]),
+                     emissive=np.array([0.0, 0.0, 0.0])):
 
-def configurar_iluminacao():
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
-    glEnable(GL_NORMALIZE)
+    #Reflexão ambiente
+    ambient = luz_amb * mat_amb
+    
+    #Reflexão difusa
+    L = luz_pos - P
+    L = L / np.linalg.norm(L)
+    N = normal / np.linalg.norm(normal)
+    diff = luz_diff * mat_diff * max(np.dot(L, N), 0.0)
 
-    glLightfv(GL_LIGHT0, GL_POSITION, [5.0, 10.0, 5.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.05, 0.05, 0.05, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
-    glShadeModel(GL_SMOOTH)
+    #Reflexão especular
+    V = cam_pos - P
+    V = V / np.linalg.norm(V)
+    R = 2 * np.dot(N, L) * N - L
+    spec = luz_spec * mat_spec * (max(np.dot(V, R), 0.0) ** mat_shine)
+
+    cor = ambient + diff + spec + emissive
+    return np.clip(cor, 0.0, 1.0)
 
 def desenhar_poste(lado):
     global poste_modelo, poste_display_list
@@ -53,29 +55,51 @@ def desenhar_poste(lado):
         glRotatef(90, 0, 1, 0)
 
         for mesh in poste_modelo.mesh_list:
-            material = None
+            # Materiais padrão
+            mat_amb = np.array([0.2, 0.2, 0.2])
+            mat_diff = np.array([0.5, 0.5, 0.5])
+            mat_spec = np.array([0.5, 0.5, 0.5])
+            emissive = np.array([0.0, 0.0, 0.0])
+            mat_shine = 32.0
+
             if mesh.materials:
                 material_name = mesh.materials[0].name
                 material = poste_modelo.materials.get(material_name)
-
-            if material:
-                aplicar_material(material)
-            else:
-                # fallback material
-                glMaterialfv(GL_FRONT, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-                glMaterialfv(GL_FRONT, GL_DIFFUSE, [0.5, 0.5, 0.5, 1.0])
-                glMaterialfv(GL_FRONT, GL_SPECULAR, [0.2, 0.2, 0.2, 1.0])
-                glMaterialf(GL_FRONT, GL_SHININESS, 30.0)
+                if material:
+                    if hasattr(material, 'ambient'):
+                        mat_amb = np.array(material.ambient[:3])
+                    if hasattr(material, 'diffuse'):
+                        mat_diff = np.array(material.diffuse[:3])
+                    if hasattr(material, 'specular'):
+                        mat_spec = np.array(material.specular[:3])
+                    if hasattr(material, 'shininess'):
+                        mat_shine = float(material.shininess)
+                    if hasattr(material, 'emissive'):
+                        emissive = np.array(material.emissive[:3])
 
             glBegin(GL_TRIANGLES)
             for face in mesh.faces:
                 for vertex_i in face:
-                    if poste_modelo.parser.normals:
-                        try:
-                            glNormal3f(*poste_modelo.parser.normals[vertex_i])
-                        except IndexError:
-                            glNormal3f(0.0, 1.0, 0.0)  # fallback normal
-                    glVertex3f(*poste_modelo.vertices[vertex_i])
+                    P = np.array(poste_modelo.vertices[vertex_i])
+                    try:
+                        normal = np.array(poste_modelo.parser.normals[vertex_i])
+                    except (IndexError, AttributeError):
+                        normal = np.array([0.0, 1.0, 0.0])
+
+                    cor = phong_iluminacao(
+                        P,
+                        cam_pos=np.array([0.0, 0.0, 20.0]),
+                        normal=normal,
+                        mat_amb=mat_amb,
+                        mat_diff=mat_diff,
+                        mat_spec=mat_spec,
+                        mat_shine=mat_shine,
+                        emissive=emissive
+                    )
+
+                    glColor3f(*cor)
+                    glNormal3f(*normal)
+                    glVertex3f(*P)
             glEnd()
 
         glPopMatrix()
@@ -83,9 +107,8 @@ def desenhar_poste(lado):
 
     glPushMatrix()
     glTranslatef(lado, 0, 0)
-    configurar_iluminacao()
-    glCallList(poste_display_list)
     glDisable(GL_LIGHTING)
-    glDisable(GL_LIGHT0)
+    glEnable(GL_NORMALIZE)
+    glCallList(poste_display_list)
     glDisable(GL_NORMALIZE)
     glPopMatrix()
