@@ -14,11 +14,14 @@ llm = ChatOpenAI(
 
 def extrair_dados(frase, tipo_prompt):
     prompt = get_prompt(frase, tipo_prompt)
-
     resposta = llm.invoke(prompt)
+
     try:
-        return resposta.content
-    except:
-        print("⚠️ Erro ao interpretar frase!")
-        print(resposta.content)
+        dados = json.loads(resposta.content)  
+        print(f"🔍 Intenção detectada: {dados['intent']}")  
+        return dados['resposta']  
+    except Exception as e:
+        print("⚠️ Erro ao interpretar a resposta da LLM!")
+        print("Resposta bruta:", resposta.content)
+        print("Erro:", e)
         return None
