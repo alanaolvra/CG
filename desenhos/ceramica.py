@@ -107,7 +107,7 @@ def desenhar_ceramica(ladox, ladoz):
     if ceramica_modelo is None:
         carregar_ceramica()
         bbox_ceramica = calcular_bounding_box(ceramica_modelo)
-        bbox_ceramica = transformar_bounding_box(bbox_ceramica, [1.7, 1, 3.7], [-3, 0, -10])
+        bbox_ceramica = transformar_bounding_box(bbox_ceramica, [1.7, 1, 2.5], [-3, 0, -10])
         objetos_colisao["ceramica"] = bbox_ceramica
 
     glPushMatrix()

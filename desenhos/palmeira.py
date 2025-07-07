@@ -1,7 +1,5 @@
 from OpenGL.GL import *
 import pywavefront
-from colisao import objetos_colisao
-from colisao import calcular_bounding_box, transformar_bounding_box
 from textura import carregar_textura, carregar_textura_PIL
 
 palmeira_modelo = None
@@ -106,9 +104,6 @@ def desenhar_palmeira(ladox, ladoz):
 
     if palmeira_modelo is None:
         carregar_palmeira()
-        bbox_palmeira = calcular_bounding_box(palmeira_modelo)
-        bbox_palmeira = transformar_bounding_box(bbox_palmeira, [1, 1, 1], [-17, 0, -10])
-        objetos_colisao["palmeira"] = bbox_palmeira
 
     glPushMatrix()
     configurar_iluminacao()

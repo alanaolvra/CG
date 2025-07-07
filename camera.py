@@ -78,8 +78,8 @@ class Camera:
                 nova_pos += right * speed
 
         # Clamping nos limites da cena [-20, 20] em X e Z
-        nova_pos[0] = max(-19.2, min(19.2, nova_pos[0]))
-        nova_pos[2] = max(-19.2, min(19.2, nova_pos[2]))
+        nova_pos[0] = max(-18.5, min(18.5, nova_pos[0]))
+        nova_pos[2] = max(-18.5, min(18.5, nova_pos[2]))
 
         self.pos = nova_pos
 

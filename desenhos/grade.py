@@ -99,7 +99,7 @@ def desenhar_grade():
     if grade_modelo is None:
         carregar_grade()
         bbox_grade = calcular_bounding_box(grade_modelo)
-        bbox_grade = transformar_bounding_box(bbox_grade, [0.8, 0.8, 0.8], [0, 0, 0])
+        bbox_grade = transformar_bounding_box(bbox_grade, [0.7, 0.7, 0.7], [0, 0, 0])
         objetos_colisao["grade"] = bbox_grade
 
     glPushMatrix()
