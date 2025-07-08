@@ -72,8 +72,8 @@ def main():
     textura_madeira = carregar_textura("images/banco.jpeg")
     textura_grama = carregar_textura("images/grama.png")
     textura_agua = carregar_textura("images/agua.png")
-    textura_rua = carregar_textura_PIL("images/rua2.jpg")
-    textura_ceu = carregar_textura_PIL("images/ceu2.png")
+    textura_rua = carregar_textura_PIL("images/rua.jpg")
+    textura_ceu = carregar_textura_PIL("images/ceu.png")
     last_frame = glfw.get_time()
 
     while not glfw.window_should_close(window):

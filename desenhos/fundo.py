@@ -40,6 +40,8 @@ def desenhar_ceu(textura_paredes_id, textura_teto_id, tamanho=20, altura=15):
 
     glEnable(GL_TEXTURE_2D)
     glEnable(GL_LIGHTING)
+
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [0.4, 0.4, 0.4, 1.0])  # luz ambiente global
     glEnable(GL_LIGHT0)
 
     # Luz branca vinda de cima
@@ -50,6 +52,8 @@ def desenhar_ceu(textura_paredes_id, textura_teto_id, tamanho=20, altura=15):
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_color)
 
     # Material do céu
+    glEnable(GL_LIGHT1)
+    glLightfv(GL_LIGHT1, GL_POSITION, [0, 0, -50, 1.0])
     glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
     glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 32)
