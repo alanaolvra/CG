@@ -1,18 +1,31 @@
 from OpenGL.GL import *
+import numpy as np
 
 banco_display_list = None
-def configurar_iluminacao():
-    glEnable(GL_LIGHTING)
-    glEnable(GL_LIGHT0)
-    glEnable(GL_COLOR_MATERIAL)
 
-    glLightfv(GL_LIGHT0, GL_POSITION, [2.0, 5.0, 2.0, 1.0])
-    glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.7, 0.7, 0.7, 1.0])
-    glLightfv(GL_LIGHT0, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
+                     luz_pos=np.array([2.0, 5.0, 2.0]),
+                     luz_amb=np.array([0.8, 0.8, 0.8]),
+                     luz_diff=np.array([0.7, 0.7, 0.7]),
+                     luz_spec=np.array([1.0, 1.0, 1.0])):
 
-    glMaterialfv(GL_FRONT, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
-    glMaterialfv(GL_FRONT, GL_SHININESS, 50)
+    #Reflexão ambiente
+    ambient = luz_amb * mat_amb
+    
+    #Reflexão difusa
+    L = luz_pos - P
+    L = L / np.linalg.norm(L)
+    N = normal / np.linalg.norm(normal)
+    diff = luz_diff * mat_diff * max(np.dot(L, N), 0.0)
+
+    #Reflexão especular
+    V = cam_pos - P
+    V = V / np.linalg.norm(V)
+    R = 2 * np.dot(N, L) * N - L
+    spec = luz_spec * mat_spec * (max(np.dot(V, R), 0.0) ** mat_shine)
+
+    cor = ambient + diff + spec
+    return np.clip(cor, 0.0, 1.0)
 
 def desenhar_retangulo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura=None):
     glPushMatrix()
@@ -32,49 +45,59 @@ def desenhar_retangulo_escalado(x, y, z, sx, sy, sz, usar_textura=False, textura
     glPopMatrix()
 
 def desenhar_retangulo(repeat_x=4, repeat_y=4):
+    # Definições fixas de iluminação e material
+    cam_pos = np.array([0.0, 0.0, 5.0])
+    mat_amb = np.array([0.2, 0.1, 0.1])
+    mat_diff = np.array([0.7, 0.4, 0.1])
+    mat_spec = np.array([0.3, 0.3, 0.1])
+    mat_shine = 50
+
+    # Função auxiliar para aplicar iluminação Phong e desenhar vértice
+    def vertex(normal, tex_coord, position):
+        P = np.array(position)
+        cor = phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine)
+        glColor3fv(cor)
+        glTexCoord2f(*tex_coord)
+        glVertex3f(*position)
+
     glBegin(GL_QUADS)
 
     # Frente
-    glNormal3f(0, 0, 1)
-    glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5,  0.5)
-    glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, -0.5,  0.5)
-    glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5,  0.5,  0.5)
-    glTexCoord2f(0, repeat_y); glVertex3f(-0.5,  0.5,  0.5)
+    normal = (0, 0, 1)
+    tex = [(0, 0), (repeat_x, 0), (repeat_x, repeat_y), (0, repeat_y)]
+    verts = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, 0.5, 0.5)]
+    for tc, v in zip(tex, verts):
+        vertex(normal, tc, v)
 
     # Trás
-    glNormal3f(0, 0, -1)
-    glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, -0.5)
-    glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, -0.5, -0.5)
-    glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5,  0.5, -0.5)
-    glTexCoord2f(0, repeat_y); glVertex3f(-0.5,  0.5, -0.5)
+    normal = (0, 0, -1)
+    verts = [(-0.5, -0.5, -0.5), (0.5, -0.5, -0.5), (0.5, 0.5, -0.5), (-0.5, 0.5, -0.5)]
+    for tc, v in zip(tex, verts):
+        vertex(normal, tc, v)
 
     # Esquerda
-    glNormal3f(-1, 0, 0)
-    glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, -0.5)
-    glTexCoord2f(repeat_x, 0); glVertex3f(-0.5, -0.5,  0.5)
-    glTexCoord2f(repeat_x, repeat_y); glVertex3f(-0.5,  0.5,  0.5)
-    glTexCoord2f(0, repeat_y); glVertex3f(-0.5,  0.5, -0.5)
+    normal = (-1, 0, 0)
+    verts = [(-0.5, -0.5, -0.5), (-0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (-0.5, 0.5, -0.5)]
+    for tc, v in zip(tex, verts):
+        vertex(normal, tc, v)
 
     # Direita
-    glNormal3f(1, 0, 0)
-    glTexCoord2f(0, 0); glVertex3f(0.5, -0.5, -0.5)
-    glTexCoord2f(repeat_x, 0); glVertex3f(0.5, -0.5,  0.5)
-    glTexCoord2f(repeat_x, repeat_y); glVertex3f(0.5,  0.5,  0.5)
-    glTexCoord2f(0, repeat_y); glVertex3f(0.5,  0.5, -0.5)
+    normal = (1, 0, 0)
+    verts = [(0.5, -0.5, -0.5), (0.5, -0.5, 0.5), (0.5, 0.5, 0.5), (0.5, 0.5, -0.5)]
+    for tc, v in zip(tex, verts):
+        vertex(normal, tc, v)
 
     # Topo
-    glNormal3f(0, 1, 0)
-    glTexCoord2f(0, 0); glVertex3f(-0.5, 0.5, -0.5)
-    glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, 0.5, -0.5)
-    glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5, 0.5,  0.5)
-    glTexCoord2f(0, repeat_y); glVertex3f(-0.5, 0.5,  0.5)
+    normal = (0, 1, 0)
+    verts = [(-0.5, 0.5, -0.5), (0.5, 0.5, -0.5), (0.5, 0.5, 0.5), (-0.5, 0.5, 0.5)]
+    for tc, v in zip(tex, verts):
+        vertex(normal, tc, v)
 
     # Base
-    glNormal3f(0, -1, 0)
-    glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, -0.5)
-    glTexCoord2f(repeat_x, 0); glVertex3f( 0.5, -0.5, -0.5)
-    glTexCoord2f(repeat_x, repeat_y); glVertex3f( 0.5, -0.5,  0.5)
-    glTexCoord2f(0, repeat_y); glVertex3f(-0.5, -0.5,  0.5)
+    normal = (0, -1, 0)
+    verts = [(-0.5, -0.5, -0.5), (0.5, -0.5, -0.5), (0.5, -0.5, 0.5), (-0.5, -0.5, 0.5)]
+    for tc, v in zip(tex, verts):
+        vertex(normal, tc, v)
 
     glEnd()
 

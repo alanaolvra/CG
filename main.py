@@ -35,6 +35,9 @@ camera = get_camera()
 def init_window():
     if not glfw.init():
         return None
+    
+    glfw.window_hint(glfw.SAMPLES, 8)
+
     window = glfw.create_window(1920, 1080, "Coluna da Hora - Russas", None, None)
     icon = "images/icon.jpg"
     glfw.set_window_icon(window, 1, Image.open(icon))
@@ -60,6 +63,7 @@ def main():
 
     glEnable(GL_DEPTH_TEST)
     glEnable(GL_BLEND)
+    glEnable(GL_MULTISAMPLE)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
     glMatrixMode(GL_PROJECTION)
