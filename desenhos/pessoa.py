@@ -1,7 +1,7 @@
 from OpenGL.GL import *
 from colisao import objetos_colisao
 from colisao import calcular_bounding_box, transformar_bounding_box
-from textura import carregar_textura, carregar_textura_PIL
+from textura import carregar_textura
 import pywavefront
 
 pessoa_modelo = None
@@ -25,7 +25,7 @@ def carregar_pessoa():
         for nome_material, material in pessoa_modelo.materials.items():
             if hasattr(material, 'texture') and material.texture is not None:
                 textura_path = material.texture.path
-                textura_id = carregar_textura_PIL(textura_path)
+                textura_id = carregar_textura(textura_path)
                 if textura_id is not None:
                     texturas_carregadas[nome_material] = textura_id
         # Gera display list
@@ -53,13 +53,10 @@ def carregar_pessoa():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        #print("[✓] Modelo barraca carregado e cacheado com sucesso")
+        #print("Modelo barraca carregado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo barraca: {e}")
-
-
-
 
 def aplicar_material(material, nome_textura=None):
     if material is not None:
@@ -79,21 +76,20 @@ def aplicar_material(material, nome_textura=None):
         glBindTexture(GL_TEXTURE_2D, texturas_carregadas[nome_textura])
     else:
         glDisable(GL_TEXTURE_2D)
-
         
 def configurar_iluminacao():
     glEnable(GL_LIGHTING)
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
 
-    # Luz principal (direcional suave)
+    #LUZ 1: DE CIMA
     glEnable(GL_LIGHT0)
     glLightfv(GL_LIGHT0, GL_POSITION, [4.0, 10.0, 10.0, 1.0])
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.2, 0.2, 0.2, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [0.7, 0.7, 0.7, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [0.3, 0.3, 0.3, 1.0])
 
-    # Luz de preenchimento (oposta à principal)
+    # Luz 2: de trás
     glEnable(GL_LIGHT1)
     glLightfv(GL_LIGHT1, GL_POSITION, [-4.0, -2.0, -8.0, 1.0])
     glLightfv(GL_LIGHT1, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])

@@ -2,7 +2,7 @@ from OpenGL.GL import *
 import pywavefront
 from colisao import objetos_colisao
 from colisao import calcular_bounding_box, transformar_bounding_box
-from textura import carregar_textura, carregar_textura_PIL
+from textura import carregar_textura
 
 tapete_modelo = None
 tapete_display_list = None
@@ -22,7 +22,7 @@ def carregar_tapete():
         for nome_material, material in tapete_modelo.materials.items():
             if hasattr(material, 'texture') and material.texture is not None:
                 textura_path = material.texture.path
-                textura_id = carregar_textura_PIL(textura_path)
+                textura_id = carregar_textura(textura_path)
                 if textura_id is not None:
                     texturas_carregadas[nome_material] = textura_id
 
@@ -51,13 +51,10 @@ def carregar_tapete():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        #print("[✓] Modelo tapete carregado e cacheado com sucesso")
+        #print("[Modelo tapete carregado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo tapete: {e}")
-
-
-
 
 def aplicar_material(material, nome_textura=None):
     if material is not None:

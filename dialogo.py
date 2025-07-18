@@ -3,17 +3,18 @@ import pygame
 from pygame import freetype
 from OpenGL.GL import *
 import numpy as np
+import math
+import time
 
 from Agente.extrair import extrair_dados
 
 pos_pessoa = np.array([5, 1.5, 12], dtype=np.float32)
 DISTANCIA_INTERACAO = 1.5
 
-mensagens_dialogo = []  # lista de strings
+mensagens_dialogo = []
 texto_digitado = ""
 dialogo_ativo = False
 
-# Inicializa pygame font uma vez (chame no início do programa)
 pygame.font.init()
 FONT = pygame.font.SysFont("Arial", 24)
 
@@ -45,13 +46,11 @@ def tratar_evento_tecla(window, key, scancode, action, mods):
         if key == glfw.KEY_ENTER:
             if texto_digitado.strip():
                 mensagens_dialogo.append("Você: " + texto_digitado)
-                # Simula resposta do vendedor (exemplo)
                 resposta_vendedor = extrair_dados(texto_digitado, tipo_prompt="vendedor")
                 mensagens_dialogo.append(resposta_vendedor)
                 texto_digitado = ""
         elif key == glfw.KEY_BACKSPACE:
             texto_digitado = texto_digitado[:-1]
-
 
 def tratar_evento_char(window, codepoint):
     global texto_digitado
@@ -93,25 +92,18 @@ def renderizar_texto_multilinha(texto, fonte, cor, largura_max):
         linhas.append(surf)
     return linhas
 
-
-import time
-
-# Configuração do scroll suave
 scroll_offset = 0
 scroll_target = 0
-scroll_speed = 500  # pixels por segundo
+scroll_speed = 500 
 mensagens_animadas = []
 
-# Quando adicionar nova mensagem:
 def adicionar_mensagem(msg):
     mensagens_dialogo.append(msg)
     if len(mensagens_dialogo) > 50:
         mensagens_dialogo.pop(0)
 
-    # Definimos novo alvo de scroll
     calcular_scroll_target()
 
-    # Marcar mensagem para animação de fade-in
     mensagens_animadas.append({'texto': msg, 'start_time': time.time()})
 
 def calcular_scroll_target():
@@ -158,7 +150,6 @@ def desenhar_overlay(dt):
     glDisable(GL_DEPTH_TEST)
     glDisable(GL_LIGHTING)
 
-    # Configurações da caixa de diálogo
     margem_lateral = 100
     margem_inferior = 150
     largura_caixa = 1920 - 2 * margem_lateral
@@ -166,7 +157,6 @@ def desenhar_overlay(dt):
     x1 = margem_lateral
     y1 = margem_inferior
 
-    # Fundo da caixa preta
     glColor4f(0, 0, 0, 0.5)
     desenhar_retangulo_arredondado(x1, y1, largura_caixa, altura_caixa, 20)
 
@@ -174,11 +164,10 @@ def desenhar_overlay(dt):
     espacamento_mensagem = 15
     altura_disponivel = altura_caixa - 2 * padding - 80  # -80 para nunca tocar a barra de input
 
-    # Prepara mensagens para renderizar
     mensagens_render = []
     altura_total = 0
 
-    for msg in reversed(mensagens_dialogo):  # Começa da última para cima
+    for msg in reversed(mensagens_dialogo): 
         if msg.startswith("Você:"):
             cor_fundo = (0.2, 0.4, 1.0)
             alinhamento = 'direita'
@@ -192,7 +181,7 @@ def desenhar_overlay(dt):
         altura_msg = sum(linha.get_height() + 5 for linha in linhas) - 5 + 20
 
         if altura_total + altura_msg > altura_disponivel:
-            break  # não cabe mais
+            break
         mensagens_render.insert(0, {
             'linhas': linhas,
             'altura': altura_msg,
@@ -201,7 +190,6 @@ def desenhar_overlay(dt):
         })
         altura_total += altura_msg + espacamento_mensagem
 
-    # Desenha as mensagens de cima para baixo
     linha_y = y1 + altura_caixa - padding
 
     for item in mensagens_render:
@@ -223,7 +211,6 @@ def desenhar_overlay(dt):
 
         linha_y -= altura_total + espacamento_mensagem
 
-    # Campo de entrada
     entrada_texto = "Você: " + texto_digitado
     entrada_linhas = renderizar_texto_multilinha(entrada_texto, FONT, (255, 255, 255), largura_caixa - 2 * padding - 20)
     entrada_altura = sum(linha.get_height() + 5 for linha in entrada_linhas) - 5
@@ -250,21 +237,13 @@ def desenhar_overlay(dt):
     glPopMatrix()
     glMatrixMode(GL_MODELVIEW)
 
-
-
-
-
-import math
-
 def desenhar_retangulo_arredondado(x, y, largura, altura, raio, cor=(0, 0, 0, 0.7)):
     glColor4f(*cor)
     segmentos = 16
 
-    # centro das curvas
     cx = [x + raio, x + largura - raio]
     cy = [y + raio, y + altura - raio]
 
-    # quadrados centrais
     glBegin(GL_QUADS)
     glVertex2f(x + raio, y)
     glVertex2f(x + largura - raio, y)
@@ -277,7 +256,6 @@ def desenhar_retangulo_arredondado(x, y, largura, altura, raio, cor=(0, 0, 0, 0.
     glVertex2f(x + largura, y + raio)
     glEnd()
 
-    # cantos arredondados
     for i, (cx_i, cy_i) in enumerate([(cx[0], cy[0]), (cx[1], cy[0]), (cx[1], cy[1]), (cx[0], cy[1])]):
         glBegin(GL_TRIANGLE_FAN)
         glVertex2f(cx_i, cy_i)

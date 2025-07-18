@@ -29,11 +29,9 @@ def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
     return np.clip(cor, 0.0, 1.0)
 
 
-def desenhar_grama(lado, textura_grama, repeat=8):
-    cam_pos = np.array([0.0, 5.0, 8.0])  # Ajuste conforme sua câmera real
-    normal = np.array([0.0, 1.0, 0.0])   # Plano horizontal
+def desenhar_grama(lado, textura_grama, cam_pos, repeat=8):
+    normal = np.array([0.0, 1.0, 0.0])
 
-    # Material da grama
     mat_amb = np.array([0.1, 0.4, 0.1])
     mat_diff = np.array([0.2, 0.8, 0.2])
     mat_spec = np.array([0.2, 0.5, 0.2])
@@ -73,7 +71,7 @@ def desenhar_grama(lado, textura_grama, repeat=8):
 
     glPushMatrix()
     glTranslatef(lado, 0, 0)
-    glDisable(GL_LIGHTING)  # usando iluminação manual
+    glDisable(GL_LIGHTING)
     glEnable(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, textura_grama)
 

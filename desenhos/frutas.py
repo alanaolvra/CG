@@ -2,7 +2,7 @@ from OpenGL.GL import *
 import pywavefront
 from colisao import objetos_colisao
 from colisao import calcular_bounding_box, transformar_bounding_box
-from textura import carregar_textura, carregar_textura_PIL
+from textura import carregar_textura
 
 frutas_modelo = None
 frutas_display_list = None
@@ -22,7 +22,7 @@ def carregar_frutas():
         for nome_material, material in frutas_modelo.materials.items():
             if hasattr(material, 'texture') and material.texture is not None:
                 textura_path = material.texture.path
-                textura_id = carregar_textura_PIL(textura_path)
+                textura_id = carregar_textura(textura_path)
                 if textura_id is not None:
                     texturas_carregadas[nome_material] = textura_id
 
@@ -51,13 +51,10 @@ def carregar_frutas():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        #print("[✓] Modelo frutas carregado e cacheado com sucesso")
+        #print("Modelo frutas carregado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo frutas: {e}")
-
-
-
 
 def aplicar_material(material, nome_textura=None):
     if material is not None:
@@ -84,14 +81,14 @@ def configurar_iluminacao():
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
     
-    #LUZ 1: DE CIMA (POSICIONAL)
+    #LUZ 1: DE CIMA
     glEnable(GL_LIGHT0)
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.02, 0.02, 0.02, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
     glLightfv(GL_LIGHT0, GL_SPECULAR, [0.0, 0.0, 0.0, 1.0])
     glLightfv(GL_LIGHT0, GL_POSITION, [8.0, 5.0, 14.0, 1.0])
 
-    #LUZ 2: De trás (DIRECIONAL)
+    #LUZ 2: De trás
     glEnable(GL_LIGHT1)
     glLightfv(GL_LIGHT1, GL_AMBIENT, [0.01, 0.01, 0.01, 1.0])
     glLightfv(GL_LIGHT1, GL_DIFFUSE, [0.8, 0.8, 0.8, 1.0])

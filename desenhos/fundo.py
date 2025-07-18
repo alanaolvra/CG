@@ -1,6 +1,4 @@
 from OpenGL.GL import *
-
-
 import math
 
 def desenhar_teto_esferico(raio=30, stacks=20, slices=40, textura_id=None, altura=15):
@@ -41,7 +39,7 @@ def desenhar_ceu(textura_paredes_id, textura_teto_id, tamanho=20, altura=15):
     glEnable(GL_TEXTURE_2D)
     glEnable(GL_LIGHTING)
 
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [0.4, 0.4, 0.4, 1.0])  # luz ambiente global
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, [0.4, 0.4, 0.4, 1.0])
     glEnable(GL_LIGHT0)
 
     # Luz branca vinda de cima
@@ -65,7 +63,6 @@ def desenhar_ceu(textura_paredes_id, textura_teto_id, tamanho=20, altura=15):
     y_min = 0
     y_max = altura
 
-    # ---- PAREDES COM TEXTURA 1 ----
     glBindTexture(GL_TEXTURE_2D, textura_paredes_id)
 
     # Parede traseira
@@ -104,26 +101,17 @@ def desenhar_ceu(textura_paredes_id, textura_teto_id, tamanho=20, altura=15):
     glTexCoord2f(0, 1); glVertex3f(x_max, y_max, z_min)
     glEnd()
 
-    # ---- TETO COM TEXTURA 2 ----
     glBindTexture(GL_TEXTURE_2D, textura_teto_id)
 
     # Teto
     glBindTexture(GL_TEXTURE_2D, textura_teto_id)
-    glNormal3f(0, 1, 0)  # Agora a luz bate na parte visível do teto
+    glNormal3f(0, 1, 0)
     glBegin(GL_QUADS)
     glTexCoord2f(0, 0); glVertex3f(x_min, y_max, z_min)
     glTexCoord2f(1, 0); glVertex3f(x_max, y_max, z_min)
     glTexCoord2f(1, 1); glVertex3f(x_max, y_max, z_max)
     glTexCoord2f(0, 1); glVertex3f(x_min, y_max, z_max)
     glEnd()
-
-    # desenhar_teto_esferico(
-    #     raio=tamanho * 1.5,
-    #     stacks=30,
-    #     slices=60,
-    #     textura_id=textura_teto_id,
-    #     altura=altura
-    # )
 
     glDisable(GL_TEXTURE_2D)
     glDisable(GL_LIGHTING)

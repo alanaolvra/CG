@@ -30,11 +30,11 @@ def desenhar_relogio_face():
     desenhar_quadrado(0.58)
 
     # Ponteiro das horas
-    glColor3f(0, 0, 0)  # Preto
+    glColor3f(0, 0, 0)
     desenhar_ponteiro(angulo_horas, 0.15, 0.02)
 
     # Ponteiro dos minutos
-    glColor3f(0, 0, 0)  # Preto
+    glColor3f(0, 0, 0)
     desenhar_ponteiro(angulo_minutos, 0.25, 0.01)
 
 def desenhar_relogio():
@@ -50,9 +50,9 @@ def desenhar_relogio():
 
     for x, y, z, rot in faces:
         glPushMatrix()
-        glTranslatef(x, y, z)  # Translação para a posição da face
-        glRotatef(rot, 0, 1, 0)  # Rotação para a face
-        desenhar_relogio_face()  # Desenha o relógio
+        glTranslatef(x, y, z)  
+        glRotatef(rot, 0, 1, 0) 
+        desenhar_relogio_face()
         glPopMatrix()
 
     # Atualizar ângulos dos ponteiros

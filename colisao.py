@@ -1,4 +1,3 @@
-# colisao.py
 import numpy as np
 
 objetos_colisao = {}
@@ -8,11 +7,22 @@ class Colisao:
         self.chao_y = 1.2
 
     def set_objetos(self, objetos):
-        """
-        Define as caixas de colisão do cenário.
-        objetos: dict {nome: {"min": [x,y,z], "max": [x,y,z]}}
-        """
         self.objetos = objetos
+        
+    def _verificar_colisao(self, pos, caixa, raio=0.3):
+            px, pz = pos[0], pos[2]
+
+            minx, maxx = caixa['min'][0], caixa['max'][0]
+            minz, maxz = caixa['min'][2], caixa['max'][2]
+
+            closest_x = max(minx, min(px, maxx))
+            closest_z = max(minz, min(pz, maxz))
+
+            dx = px - closest_x
+            dz = pz - closest_z
+            dist_squared = dx * dx + dz * dz
+
+            return dist_squared < raio * raio
 
     def checar_colisoes(self, pos):
         pos = np.copy(pos)
@@ -38,7 +48,6 @@ class Colisao:
                 overlap_z = limite_z - abs(dist_z)
 
                 if overlap_x > 0 and overlap_z > 0:
-                    # Corrige apenas no eixo com menor sobreposição (deslizamento natural)
                     if overlap_x < overlap_z:
                         pos[0] = centro_x + np.sign(dist_x) * limite_x
                     else:
@@ -46,37 +55,7 @@ class Colisao:
 
         return pos
 
-
-
-    def _verificar_colisao(self, pos, caixa, raio=0.3):
-        """
-        Verifica colisão entre uma esfera 2D (XZ) com raio e uma AABB.
-        """
-        # Posição da câmera
-        px, pz = pos[0], pos[2]
-
-        # Caixa do objeto
-        minx, maxx = caixa['min'][0], caixa['max'][0]
-        minz, maxz = caixa['min'][2], caixa['max'][2]
-
-        # Encontra o ponto mais próximo da caixa à posição (clamping)
-        closest_x = max(minx, min(px, maxx))
-        closest_z = max(minz, min(pz, maxz))
-
-        # Calcula distância entre ponto e a caixa
-        dx = px - closest_x
-        dz = pz - closest_z
-        dist_squared = dx * dx + dz * dz
-
-        return dist_squared < raio * raio
-
-
-# Funções utilitárias fora da classe
-
 def calcular_bounding_box(modelo):
-    """
-    Retorna a bounding box (AABB) de um modelo carregado com pywavefront.
-    """
     if not modelo or not modelo.vertices:
         return None
 
@@ -90,11 +69,6 @@ def calcular_bounding_box(modelo):
     }
 
 def transformar_bounding_box(caixa, escala, translacao):
-    """
-    Aplica escala e translação a uma bounding box.
-    escala: [sx, sy, sz]
-    translacao: [tx, ty, tz]
-    """
     if not caixa:
         return None
 

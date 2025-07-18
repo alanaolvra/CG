@@ -4,7 +4,6 @@ from colisao import objetos_colisao, transformar_bounding_box
 torre_display_list = None
 
 def carregar_torre():
-    # Bounding box base: um pouco maior nas laterais e no topo
     bbox_torre_base = {
         "min": [-1.4, -1.4, -1.4],
         "max": [1.4,1.4,1.4]
@@ -12,10 +11,8 @@ def carregar_torre():
     escala = [1, 5, 1]
     translacao = [0, 2.5, 0]
 
-    # Aplica transformação na bounding box
     bbox_torre = transformar_bounding_box(bbox_torre_base, escala, translacao)
 
-    # Registra a torre no sistema de colisão
     objetos_colisao["Torre"] = bbox_torre
 
 def desenhar_torre():

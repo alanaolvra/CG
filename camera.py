@@ -1,5 +1,3 @@
-# camera.py
-
 import numpy as np
 import math
 import glfw
@@ -18,7 +16,6 @@ class Camera:
         self.last_y = 300
         self.first_mouse = True
         self.cursor_enabled = False
-        self.f_key_pressed = False
 
     def enable_cursor(self, window):
         glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_NORMAL)
@@ -77,7 +74,6 @@ class Camera:
             if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
                 nova_pos += right * speed
 
-        # Clamping nos limites da cena [-20, 20] em X e Z
         nova_pos[0] = max(-18.5, min(18.5, nova_pos[0]))
         nova_pos[2] = max(-18.5, min(18.5, nova_pos[2]))
 

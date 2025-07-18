@@ -21,16 +21,14 @@ def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
                      luz_amb=np.array([0.5, 0.5, 0.5]),
                      luz_diff=np.array([1.0, 1.0, 1.0]),
                      luz_spec=np.array([1.0, 1.0, 1.0])):
-    #Reflexão ambiente
+
     ambient = luz_amb * mat_amb
-    
-    #Reflexão difusa
+
     L = luz_pos - P
     L = L / np.linalg.norm(L)
     N = normal / np.linalg.norm(normal)
     diff = luz_diff * mat_diff * max(np.dot(L, N), 0.0)
 
-    #Reflexão especular
     V = cam_pos - P
     V = V / np.linalg.norm(V)
     R = 2 * np.dot(N, L) * N - L
@@ -39,7 +37,7 @@ def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
     cor = ambient + diff + spec
     return np.clip(cor, 0.0, 1.0)
 
-def desenhar_cristo():
+def desenhar_cristo(cam_pos):
     global cristo_modelo, cristo_display_list
 
     if cristo_modelo is None:
@@ -55,11 +53,10 @@ def desenhar_cristo():
         glScalef(0.08, 0.08, 0.08)
 
         for mesh in cristo_modelo.mesh_list:
-            # Material base (ou valores fixos)
-            mat_amb=np.array([1.0, 1.0, 1.0])
-            mat_diff=np.array([1.0, 1.0, 1.0])
-            mat_spec=np.array([1.0, 1.0, 1.0])
-            mat_shine=128.0
+            mat_amb = np.array([1.0, 1.0, 1.0])
+            mat_diff = np.array([1.0, 1.0, 1.0])
+            mat_spec = np.array([1.0, 1.0, 1.0])
+            mat_shine = 128.0
 
             if mesh.materials:
                 material_name = mesh.materials[0].name
@@ -85,14 +82,13 @@ def desenhar_cristo():
 
                     cor = phong_iluminacao(
                         P,
-                        cam_pos=np.array([0.0, 0.0, 20.0]),
+                        cam_pos=cam_pos,
                         normal=normal,
                         mat_amb=mat_amb,
                         mat_diff=mat_diff,
                         mat_spec=mat_spec,
                         mat_shine=mat_shine
                     )
-
 
                     glColor3f(*cor)
                     glNormal3f(*normal)
@@ -102,7 +98,6 @@ def desenhar_cristo():
         glPopMatrix()
         glEndList()
 
-    # Renderização
     glPushMatrix()
     glDisable(GL_LIGHTING)
     glEnable(GL_NORMALIZE)

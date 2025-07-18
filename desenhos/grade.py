@@ -2,7 +2,7 @@ from OpenGL.GL import *
 import pywavefront
 from colisao import objetos_colisao
 from colisao import calcular_bounding_box, transformar_bounding_box
-from textura import carregar_textura, carregar_textura_PIL
+from textura import carregar_textura
 
 grade_modelo = None
 grade_display_list = None
@@ -22,7 +22,7 @@ def carregar_grade():
         for nome_material, material in grade_modelo.materials.items():
             if hasattr(material, 'texture') and material.texture is not None:
                 textura_path = material.texture.path
-                textura_id = carregar_textura_PIL(textura_path)
+                textura_id = carregar_textura(textura_path)
                 if textura_id is not None:
                     texturas_carregadas[nome_material] = textura_id
 
@@ -51,7 +51,7 @@ def carregar_grade():
         glDisable(GL_TEXTURE_2D)
         glEndList()
 
-        #print("[✓] Modelo grade carregado e cacheado com sucesso")
+        #print("Modelo grade carregado com sucesso")
 
     except Exception as e:
         print(f"[Erro] Falha ao carregar modelo grade: {e}")
@@ -82,7 +82,7 @@ def configurar_iluminacao():
     glShadeModel(GL_SMOOTH)
     glEnable(GL_NORMALIZE)
     
-    #LUZ 1: DE CIMA (POSICIONAL)
+    #LUZ 1: DE CIMA
     glEnable(GL_LIGHT0)
     glLightfv(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
     glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 1.0, 1.0, 1.0])

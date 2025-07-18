@@ -22,16 +22,12 @@ def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
                      luz_spec=np.array([1.0, 1.0, 1.0]),
                      emissive=np.array([0.0, 0.0, 0.0])):
 
-    #Reflexão ambiente
     ambient = luz_amb * mat_amb
-    
-    #Reflexão difusa
     L = luz_pos - P
     L = L / np.linalg.norm(L)
     N = normal / np.linalg.norm(normal)
     diff = luz_diff * mat_diff * max(np.dot(L, N), 0.0)
 
-    #Reflexão especular
     V = cam_pos - P
     V = V / np.linalg.norm(V)
     R = 2 * np.dot(N, L) * N - L
@@ -40,7 +36,7 @@ def phong_iluminacao(P, cam_pos, normal, mat_amb, mat_diff, mat_spec, mat_shine,
     cor = ambient + diff + spec + emissive
     return np.clip(cor, 0.0, 1.0)
 
-def desenhar_poste(lado):
+def desenhar_poste(lado, cam_pos):
     global poste_modelo, poste_display_list
 
     if poste_modelo is None:
@@ -55,7 +51,6 @@ def desenhar_poste(lado):
         glRotatef(90, 0, 1, 0)
 
         for mesh in poste_modelo.mesh_list:
-            # Materiais padrão
             mat_amb = np.array([0.2, 0.2, 0.2])
             mat_diff = np.array([0.5, 0.5, 0.5])
             mat_spec = np.array([0.5, 0.5, 0.5])
@@ -88,7 +83,7 @@ def desenhar_poste(lado):
 
                     cor = phong_iluminacao(
                         P,
-                        cam_pos=np.array([0.0, 0.0, 20.0]),
+                        cam_pos=cam_pos,
                         normal=normal,
                         mat_amb=mat_amb,
                         mat_diff=mat_diff,
